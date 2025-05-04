@@ -32,8 +32,9 @@ TODO：
 
 1.  一台运行兼容 macOS 版本的 Mac (M1或以上CPU，macOS 15.1或以上版本)。
 2.  管理员权限，因为脚本使用 `sudo` 执行特权命令。
-3.  稳定的互联网连接以下载脚本。
-4.  SIP (System Integrity Protection) 已禁用。**（破解完成后可重新开启，不影响AI功能）**
+3.  **系统地区设置为“美国”，系统语言、Siri语言均设置为`简体中文（普通话）/中国`或`English(USA)`——设置为其他不支持Apple AI的区域会导致开启失败。**
+4.  稳定的互联网连接以下载脚本。
+5.  SIP (System Integrity Protection) 已禁用。**（破解完成后可重新开启，不影响AI功能）**
 
 ## 执行步骤
 
