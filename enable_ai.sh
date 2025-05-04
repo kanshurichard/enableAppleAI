@@ -58,6 +58,12 @@ echo "GitHub Issues: https://github.com/CatMe0w/zouxian/issues"
 echo "按下 Enter 键继续（如果 Apple 智能已显示）..."
 read -r < /dev/tty
 
+# 6. 删除已有的 immutable flag
+echo "正在删除 /private/var/db/eligibilityd/ 目录下文件的 immutable (uchg) 标记..."
+# 删除 uchg 标记
+sudo chflags nouchg /private/var/db/eligibilityd/*
+echo "immutable (uchg) 标记设置完成。"
+
 echo ""
 echo "=============================================="
 echo "继续修改 eligibility.plist 文件..."
