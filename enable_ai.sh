@@ -56,7 +56,7 @@ echo "如果 'Apple 智能' 已经出现。请将其开启，并继续按任意�
 echo "如果 'Apple 智能' 没有出现，请不要继续，并在以下地址向该第三方脚本作者反馈问题："
 echo "GitHub Issues: https://github.com/CatMe0w/zouxian/issues"
 echo "按下 Enter 键继续（如果 Apple 智能已显示）..."
-read -r
+read -r < /dev/tty
 
 echo ""
 echo "=============================================="
