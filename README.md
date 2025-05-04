@@ -4,6 +4,9 @@
 
 本脚本同时尝试开启了“登录非AI启用区Apple ID账号（如中国区）”及“外置硬盘安装macOS”的Apple AI支持，但由于本人没有相关设备/账号，欢迎反馈你的测试结果。
 
+<img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
+
+
 ## 工作原理概述
 
 该脚本的主要思想是通过以下步骤尝试绕过 Apple 对 Apple 智能的启用检查：
