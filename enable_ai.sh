@@ -2,207 +2,413 @@
 
 set -e
 
-echo "============================================================="
-echo "  macOS Apple Intelligence 启用辅助脚本 2.0 by KanShuRichard"
-echo "============================================================="
+# --- Initial Welcome ---
+echo "==================================================================="
+echo " macOS Apple Intelligence Enablement Script V2.0 by KanShuRichard"
+echo "        macOS Apple 智能启用辅助脚本 V2.0 by KanShuRichard"
+echo "==================================================================="
 
-# 定义关键文件和目录路径
+# --- Language Selection ---
+echo "Please select your language:"
+echo "请选择你的语言:"
+echo ""
+echo "1. 中文 (Chinese)"
+echo "2. English"
+echo ""
+
+# Use < /dev/tty to ensure reading from the terminal even if script is piped
+while true; do
+    read -r -p "Enter choice/输入你的选择 (默认为中文): " lang_choice < /dev/tty
+    case "$lang_choice" in
+        1)
+            LANG="zh"
+            break # Exit the loop
+            ;;
+        2)
+            LANG="en"
+            break # Exit the loop
+            ;;
+        *)
+            LANG="zh"
+            break # Exit the loop
+            ;;
+    esac
+done
+
+# --- End Language Selection ---
+
+
+# --- Language Settings ---
+# Declare variables for messages (these will be assigned based on the selected LANG)
+MSG_TITLE=""
+MSG_PLISTBUDDY_WARN=""
+MSG_PLISTBUDDY_ERROR=""
+MSG_SIP_CHECK=""
+MSG_SIP_ENABLED_1=""
+MSG_SIP_ENABLED_2=""
+MSG_SIP_ENABLED_3=""
+MSG_SIP_ENABLED_4_1=""
+MSG_SIP_ENABLED_4_2=""
+MSG_SIP_ENABLED_4_3=""
+MSG_SIP_ENABLED_4_4=""
+MSG_SIP_ENABLED_5=""
+MSG_SIP_DISABLED=""
+MSG_START_STEPS=""
+MSG_PREPARE_MODIFY=""
+MSG_UNLOCK_PERMS=""
+MSG_WRITE_PERMISSION_ERROR=""
+MSG_BACKUP_START=""
+MSG_BACKUP_ERROR=""
+MSG_BACKUP_COMPLETE=""
+MSG_MODIFY_PLIST_START=""
+MSG_MODIFY_PLIST_COMPLETE=""
+MSG_DOWNLOAD_ZOUXIAN_START=""
+MSG_DOWNLOAD_ZOUXIAN_ERROR=""
+MSG_CHMOD_ZOUXIAN=""
+MSG_EXECUTE_ZOUXIAN=""
+MSG_CHECK_AI_TITLE=""
+MSG_CHECK_AI_INSTR_1=""
+MSG_CHECK_AI_INSTR_2=""
+MSG_CHECK_AI_INSTR_3=""
+MSG_CHECK_AI_PROMPT=""
+MSG_SUCCESS_CONFIRMED_START=""
+MSG_SET_PERMS_444=""
+MSG_SET_UCHG=""
+MSG_FILE_LOCK_COMPLETE=""
+MSG_CLEANUP_BACKUP=""
+MSG_OPERATION_COMPLETE=""
+MSG_RESTART_NOW=""
+MSG_CHECK_AI_AGAIN=""
+MSG_RECOMMEND_RE_ENABLE_SIP=""
+MSG_FAILURE_CONFIRMED_START=""
+MSG_RESTORE_START=""
+MSG_RESTORE_WARNING_FAILED=""
+MSG_RESTORE_WARNING_MANUAL=""
+MSG_RESTORE_COMPLETE=""
+MSG_RESTORE_WARNING_NOT_FOUND=""
+MSG_ENSURE_NO_UCHG=""
+MSG_FAILURE_CONSIDER_STEPS=""
+MSG_FAILURE_STEP_1=""
+MSG_FAILURE_STEP_2=""
+MSG_FAILURE_STEP_3=""
+MSG_CLEANUP_ZOUXIAN_START=""
+MSG_CLEANUP_COMPLETE=""
+MSG_SCRIPT_END=""
+MSG_DISCLAIMER=""
+
+
+# Assign messages based on the selected language
+case "$LANG" in
+    en*)
+        MSG_TITLE="macOS Apple Intelligence Enablement Script 2.0 by KanShuRichard"
+        MSG_PLISTBUDDY_WARN="Warning: PlistBuddy tool ($PLISTBUDDY) not found. Attempting default path."
+        MSG_PLISTBUDDY_ERROR="Error: PlistBuddy tool not found. Ensure macOS Developer Tools or Xcode is installed."
+        MSG_SIP_CHECK="Checking System Integrity Protection (SIP) status..."
+        MSG_SIP_ENABLED_1="SIP (System Integrity Protection) is currently enabled."
+        MSG_SIP_ENABLED_2="SIP must be disabled to continue."
+        MSG_SIP_ENABLED_3="Please follow these steps:"
+        MSG_SIP_ENABLED_4_1="1. Restart your Mac and press and hold the power button (for Apple Silicon Macs) or Command + R (for Intel Macs) to enter Recovery Mode."
+        MSG_SIP_ENABLED_4_2="2. In Recovery Mode, select 'Utilities' -> 'Terminal' from the menu bar."
+        MSG_SIP_ENABLED_4_3="3. In the Terminal, type 'csrutil disable' and press Enter."
+        MSG_SIP_ENABLED_4_4="4. Type 'reboot' and press Enter to restart your Mac."
+        MSG_SIP_ENABLED_5="After disabling SIP, please run this script again."
+        MSG_SIP_DISABLED="SIP (System Integrity Protection) is disabled, proceeding."
+        MSG_START_STEPS="Starting Apple Intelligence enablement attempt steps..."
+        MSG_PREPARE_MODIFY="Preparing to modify system file $ELIGIBILITY_PLIST ..."
+        MSG_UNLOCK_PERMS="Removing immutable (uchg) flag and setting permissions to 777 for files in $ELIGIBILITY_DIR/..."
+        MSG_WRITE_PERMISSION_ERROR="Error: Failed to get write permission for $ELIGIBILITY_PLIST. Please confirm SIP is disabled."
+        MSG_BACKUP_START="Backing up original file $ELIGIBILITY_PLIST to $PLIST_BACKUP ..."
+        MSG_BACKUP_ERROR="Error: Failed to successfully back up $ELIGIBILITY_PLIST file. Check permissions or disk space."
+        MSG_BACKUP_COMPLETE="Backup complete."
+        MSG_MODIFY_PLIST_START="Modifying specific keys in $ELIGIBILITY_PLIST ..."
+        MSG_MODIFY_PLIST_COMPLETE="$ELIGIBILITY_PLIST modification complete."
+        MSG_DOWNLOAD_ZOUXIAN_START="Downloading and installing third-party script zouxian.sh..."
+        MSG_DOWNLOAD_ZOUXIAN_ERROR="Error: Third-party script download failed. Check network connection or GitHub repository availability."
+        MSG_CHMOD_ZOUXIAN="Granting script execution permission..."
+        MSG_EXECUTE_ZOUXIAN="Executing third-party script zouxian..."
+        MSG_CHECK_AI_TITLE="6. Check Apple Intelligence Status"
+        MSG_CHECK_AI_INSTR_1="Important: Please go to 'System Settings' -> 'Apple Intelligence' or 'Siri' now and check if the 'Apple Intelligence' option appears."
+        MSG_CHECK_AI_INSTR_2="If 'Apple Intelligence' **does appear**, or you see signs of AI features (even if the main option is hidden), please enter Y below."
+        MSG_CHECK_AI_INSTR_3="If 'Apple Intelligence' **does not appear**, or no AI features are evident, please enter N to exit and report."
+        MSG_CHECK_AI_PROMPT="Confirm if Apple Intelligence appeared or partial functionality is enabled (Y/N): "
+        MSG_SUCCESS_CONFIRMED_START="User confirmed success, completing setup and locking files..."
+        MSG_SET_PERMS_444="Setting permissions for $ELIGIBILITY_DIR/* to 444 (read-only)..."
+        MSG_SET_UCHG="Setting immutable (uchg) flag for $ELIGIBILITY_DIR/*..."
+        MSG_FILE_LOCK_COMPLETE="File locking complete."
+        MSG_CLEANUP_BACKUP="Cleaning up backup file $PLIST_BACKUP..."
+        MSG_OPERATION_COMPLETE="Operation completed."
+        MSG_RESTART_NOW="Please restart your computer immediately."
+        MSG_CHECK_AI_AGAIN="After restarting, check Apple Intelligence status again."
+        MSG_RECOMMEND_RE_ENABLE_SIP="If Apple Intelligence remains enabled and you wish to restore system security, it is strongly recommended to enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
+        MSG_FAILURE_CONFIRMED_START="User confirmed failure, restoring files to previous state..."
+        MSG_RESTORE_START="Restoring original file $ELIGIBILITY_PLIST from backup file $PLIST_BACKUP ..."
+        MSG_RESTORE_WARNING_FAILED="Warning: Failed to restore $ELIGIBILITY_PLIST from backup."
+        MSG_RESTORE_WARNING_MANUAL="Manual intervention may be required!"
+        MSG_RESTORE_COMPLETE="$ELIGIBILITY_PLIST restore complete."
+        MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file $PLIST_BACKUP not found. Cannot restore $ELIGIBILITY_PLIST file content."
+        MSG_ENSURE_NO_UCHG="Ensuring uchg flag is removed..."
+        MSG_FAILURE_CONSIDER_STEPS="Apple Intelligence enablement attempt failed. Please consider the following steps:"
+        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta)."
+        MSG_FAILURE_STEP_2="2. Report the issue to the third-party script author: https://github.com/CatMe0w/zouxian/issues"
+        MSG_FAILURE_STEP_3="3. For system security, it is strongly recommended to restart and enter Recovery Mode to run 'csrutil enable' and re-enable SIP."
+        MSG_CLEANUP_ZOUXIAN_START="Cleaning up temporary script /usr/local/bin/zouxian..."
+        MSG_CLEANUP_COMPLETE="Cleanup complete."
+        MSG_SCRIPT_END="Script execution finished."
+        MSG_DISCLAIMER="Disclaimer: This script modifies system files and may cause instability or unexpected behavior. Use at your own risk."
+        ;;
+    *) # Default to Chinese
+        MSG_TITLE="macOS Apple Intelligence 启用辅助脚本 2.0 by KanShuRichard"
+        MSG_PLISTBUDDY_WARN="警告：找不到 PlistBuddy 工具 ($PLISTBUDDY)。尝试使用默认路径。"
+        MSG_PLISTBUDDY_ERROR="错误：找不到 PlistBuddy 工具。请确保已安装 macOS 开发者工具或 Xcode。"
+        MSG_SIP_CHECK="正在检测 System Integrity Protection (SIP) 状态..."
+        MSG_SIP_ENABLED_1="SIP (System Integrity Protection) 当前已启用。"
+        MSG_SIP_ENABLED_2="必须禁用 SIP 才能继续。"
+        MSG_SIP_ENABLED_3="请按照以下步骤操作："
+        MSG_SIP_ENABLED_4_1="1. 重启 Mac，并长按开机键（针对 Apple 芯片 Mac）或按住 Command + R（针对 Intel 芯片 Mac）进入恢复模式。"
+        MSG_SIP_ENABLED_4_2="2. 在恢复模式菜单栏中选择 '实用工具' -> '终端'。"
+        MSG_SIP_ENABLED_4_3="3. 在终端中输入 'csrutil disable' 并按回车。"
+        MSG_SIP_ENABLED_4_4="4. 输入 'reboot' 并按回车重启 Mac。"
+        MSG_SIP_ENABLED_5="SIP 禁用后，请再次运行此脚本。"
+        MSG_SIP_DISABLED="SIP (System Integrity Protection) 已禁用，可以继续。"
+        MSG_START_STEPS="开始执行 Apple Intelligence 启用尝试步骤..."
+        MSG_PREPARE_MODIFY="正在准备修改系统文件 $ELIGIBILITY_PLIST ..."
+        MSG_UNLOCK_PERMS="正在删除 /private/var/db/eligibilityd/ 目录下文件的 immutable (uchg) 标记并设置权限为 777..."
+        MSG_WRITE_PERMISSION_ERROR="错误：未能获得 $ELIGIBILITY_PLIST 文件的写入权限。请再次确认已禁用 SIP。"
+        MSG_BACKUP_START="正在备份原始文件 $ELIGIBILITY_PLIST 到 $PLIST_BACKUP ..."
+        MSG_BACKUP_ERROR="错误：未能成功备份 $ELIGIBILITY_PLIST 文件。请检查权限或磁盘空间。"
+        MSG_BACKUP_COMPLETE="备份完成。"
+        MSG_MODIFY_PLIST_START="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
+        MSG_MODIFY_PLIST_COMPLETE="$ELIGIBILITY_PLIST 修改完成。"
+        MSG_DOWNLOAD_ZOUXIAN_START="正在下载并安装第三方脚本 zouxian.sh..."
+        MSG_DOWNLOAD_ZOUXIAN_ERROR="错误：第三方脚本下载失败。请检查网络连接或 GitHub 仓库是否可用。"
+        MSG_CHMOD_ZOUXIAN="赋予脚本执行权限..."
+        MSG_EXECUTE_ZOUXIAN="执行第三方脚本 zouxian..."
+        MSG_CHECK_AI_TITLE="6. 请检查 Apple 智能状态"
+        MSG_CHECK_AI_INSTR_1="重要：现在请去 '系统设置' -> 'Apple 智能' 或 'Siri' 检查'Apple智能'选项是否已经出现。"
+        MSG_CHECK_AI_INSTR_2="如果 'Apple 智能' **已经出现**，或者你发现 Siri/Spotlight 已经具备 Apple 智能的某些功能（即使入口没出现），请在下面输入 Y。"
+        MSG_CHECK_AI_INSTR_3="如果 'Apple 智能' **没有出现**，或者没有任何迹象表明功能已启用，请在下面输入 N。"
+        MSG_CHECK_AI_PROMPT="请确认 Apple 智能是否已出现或部分功能已启用 (Y/N): "
+        MSG_SUCCESS_CONFIRMED_START="用户确认成功，正在完成设置并锁定文件..."
+        MSG_SET_PERMS_444="设置 $ELIGIBILITY_DIR/* 的权限为 444 (只读)..."
+        MSG_SET_UCHG="设置 $ELIGIBILITY_DIR/* 的 immutable (uchg) 标记..."
+        MSG_FILE_LOCK_COMPLETE="文件锁定完成。"
+        MSG_CLEANUP_BACKUP="清理备份文件 $PLIST_BACKUP..."
+        MSG_OPERATION_COMPLETE="操作已完成。"
+        MSG_RESTART_NOW="请立即重启你的电脑。"
+        MSG_CHECK_AI_AGAIN="重启后，再次检查 Apple 智能状态。"
+        MSG_RECOMMEND_RE_ENABLE_SIP="如果 Apple 智能仍为开启，并且你希望恢复系统的安全性，强烈建议你再次进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
+        MSG_FAILURE_CONFIRMED_START="用户确认失败，正在恢复文件到修改前状态..."
+        MSG_RESTORE_START="正在从备份文件 $PLIST_BACKUP 恢复原始文件 $ELIGIBILITY_PLIST ..."
+        MSG_RESTORE_WARNING_FAILED="警告：未能从备份文件恢复 $ELIGIBILITY_PLIST。"
+        MSG_RESTORE_WARNING_MANUAL="可能需要手动恢复！"
+        MSG_RESTORE_COMPLETE="$ELIGIBILITY_PLIST 恢复完成。"
+        MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 $PLIST_BACKUP 未找到。无法恢复 $ELIGIBILITY_PLIST 文件内容。"
+        MSG_ENSURE_NO_UCHG="确保没有uchg标记..."
+        MSG_FAILURE_CONSIDER_STEPS="Apple 智能启用尝试失败。请考虑以下步骤："
+        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
+        MSG_FAILURE_STEP_2="2. 向第三方脚本作者反馈问题: https://github.com/CatMe0w/zouxian/issues"
+        MSG_FAILURE_STEP_3="3. 为了系统安全，强烈建议你重启后进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
+        MSG_CLEANUP_ZOUXIAN_START="清理临时脚本 /usr/local/bin/zouxian..."
+        MSG_CLEANUP_COMPLETE="清理完成。"
+        MSG_SCRIPT_END="脚本执行结束。"
+        MSG_DISCLAIMER="免责声明：此脚本修改系统文件，可能导致不稳定或意外行为。请自行承担风险。"
+        ;;
+esac
+
+# --- End Language Settings ---
+
+
+# Define key file and directory paths
 ELIGIBILITY_PLIST="/private/var/db/eligibilityd/eligibility.plist"
 ELIGIBILITY_DIR="/private/var/db/eligibilityd"
-PLIST_BACKUP="/tmp/eligibility.plist.bak" # 备份文件路径
-PLISTBUDDY="/usr/libexec/PlistBuddy" # PlistBuddy 工具路径
+PLIST_BACKUP="/tmp/eligibility.plist.bak" # Backup file path
+PLISTBUDDY="/usr/libexec/PlistBuddy" # PlistBuddy tool path
 
-# 检查 PlistBuddy 是否存在
+# Check if PlistBuddy exists
 if [ ! -f "$PLISTBUDDY" ]; then
-    echo "警告：找不到 PlistBuddy 工具 ($PLISTBUDDY)。尝试使用默认路径。"
+    echo "$MSG_PLISTBUDDY_WARN"
     PLISTBUDDY="PlistBuddy"
-    # 再次检查默认路径是否可用
+    # Re-check if default path is available
     if ! command -v "$PLISTBUDDY" &> /dev/null; then
-        echo "错误：找不到 PlistBuddy 工具。请确保已安装 macOS 开发者工具或 Xcode。"
+        echo "$MSG_PLISTBUDDY_ERROR"
         exit 1
     fi
 fi
 
 
-# 1. 检测 SIP 状态
-echo "正在检测 System Integrity Protection (SIP) 状态..."
+# 1. Check SIP status
+echo "$MSG_SIP_CHECK"
 sip_status=$(csrutil status)
 
 if [[ $sip_status != *"System Integrity Protection status: disabled"* ]]; then
-    echo "SIP (System Integrity Protection) 当前已启用。"
-    echo "必须禁用 SIP 才能继续。"
-    echo "请按照以下步骤操作："
-    echo "1. 重启 Mac，并长按开机键进入恢复模式。"
-    echo "2. 在恢复模式菜单栏中选择 '实用工具' -> '终端'。"
-    echo "3. 在终端中输入 'csrutil disable' 并按回车。"
-    echo "4. 输入 'reboot' 并按回车重启 Mac。"
-    echo "SIP 禁用后，请再次运行此脚本。"
+    echo "$MSG_SIP_ENABLED_1"
+    echo "$MSG_SIP_ENABLED_2"
+    echo "$MSG_SIP_ENABLED_3"
+    echo "$MSG_SIP_ENABLED_4_1"
+    echo "$MSG_SIP_ENABLED_4_2"
+    echo "$MSG_SIP_ENABLED_4_3"
+    echo "$MSG_SIP_ENABLED_4_4"
+    echo "$MSG_SIP_ENABLED_5"
     echo "=============================================="
     exit 1
 else
-    echo "SIP (System Integrity Protection) 已禁用，可以继续。"
+    echo "$MSG_SIP_DISABLED"
 fi
 
 echo ""
 echo "=============================================="
-echo "开始执行 Apple Intelligence 启用尝试步骤..."
+echo "$MSG_START_STEPS"
 
-# --- 准备修改文件 ---
-echo "正在准备修改系统文件 $ELIGIBILITY_PLIST ..."
+# --- Prepare to modify files ---
+echo "$MSG_PREPARE_MODIFY"
 
-# 2. 解锁并修改文件权限为 777
-echo "正在删除 /private/var/db/eligibilityd/ 目录下文件的 immutable (uchg) 标记并设置权限为 777..."
-# 删除 uchg 标记 (忽略错误，因为文件可能本来就没有这个标记)
+# 2. Unlock and set file permissions to 777
+echo "$MSG_UNLOCK_PERMS"
+# Remove uchg flag (ignore errors as file might not have the flag)
 sudo chflags nouchg "$ELIGIBILITY_DIR"/* || true
-# 设置权限为 777
+# Set permissions to 777
 sudo chmod 777 "$ELIGIBILITY_DIR"/*
 
-# 确保 plist 文件可写
+# Ensure plist file is writable
 if [ ! -w "$ELIGIBILITY_PLIST" ]; then
-    echo "错误：未能获得 $ELIGIBILITY_PLIST 文件的写入权限。请再次确认已禁用 SIP。"
+    echo "$MSG_WRITE_PERMISSION_ERROR"
     exit 1
 fi
 
-# 3. 备份原始 plist 文件
-echo "正在备份原始文件 $ELIGIBILITY_PLIST 到 $PLIST_BACKUP ..."
+# 3. Backup original plist file
+echo "$MSG_BACKUP_START"
 sudo cp "$ELIGIBILITY_PLIST" "$PLIST_BACKUP"
 if [ $? -ne 0 ]; then
-    echo "错误：未能成功备份 $ELIGIBILITY_PLIST 文件。请检查权限或磁盘空间。"
-    exit 1 # 备份失败是严重错误，必须退出
+    echo "$MSG_BACKUP_ERROR"
+    exit 1 # Failure to backup is critical, must exit
 fi
-echo "备份完成。"
+echo "$MSG_BACKUP_COMPLETE"
 
-# 4. 修改 plist 文件内容
-echo "正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
-# 使用 PlistBuddy 修改值，将 3 改为 2
-# 注意：PlistBuddy 的路径在脚本开头已检查/设置
+# 4. Modify plist file content
+echo "$MSG_MODIFY_PLIST_START"
+# Use PlistBuddy to set values (change 3 to 2)
+# Note: PlistBuddy path checked/set at the beginning of the script
 
-# 修改 OS_ELIGIBILITY_DOMAIN_GREYMATTER 下的值
-
+# Modify values under OS_ELIGIBILITY_DOMAIN_GREYMATTER
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST"
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST"
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST"
 
-# 修改 OS_ELIGIBILITY_DOMAIN_CALCIUM 下的值
+# Modify values under OS_ELIGIBILITY_DOMAIN_CALCIUM
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
 
+echo "$MSG_MODIFY_PLIST_COMPLETE"
 
-sudo chflags uchg "$ELIGIBILITY_PLIST"
-
-echo "$ELIGIBILITY_PLIST 修改及锁定完成。"
-
-# 5. 下载并执行第三方脚本 zouxian (顺序后移)
-echo "正在下载并安装第三方脚本 zouxian.sh..."
-# 使用 sudo 下载文件到系统目录
+# 5. Download and execute third-party script zouxian (Moved later in sequence)
+echo "$MSG_DOWNLOAD_ZOUXIAN_START"
+# Use sudo to download file to a system directory
 sudo curl https://raw.githubusercontent.com/CatMe0w/zouxian/master/zouxian.sh -o /usr/local/bin/zouxian
 
-# 确保下载成功
+# Ensure download was successful
 if [ ! -f "/usr/local/bin/zouxian" ]; then
-    echo "错误：第三方脚本下载失败。请检查网络连接或 GitHub 仓库是否可用。"
-    # 下载失败也算操作失败，进入失败处理流程前的清理
-    sudo rm -f "$PLIST_BACKUP" # 清理备份文件
-    exit 1 # 退出脚本
+    echo "$MSG_DOWNLOAD_ZOUXIAN_ERROR"
+    # Clean up backup file if download fails before entering success/failure logic
+    sudo rm -f "$PLIST_BACKUP"
+    exit 1 # Exit script
 fi
 
-echo "赋予脚本执行权限..."
+echo "$MSG_CHMOD_ZOUXIAN"
 sudo chmod +x /usr/local/bin/zouxian
 
-echo "执行第三方脚本 zouxian..."
-# 执行下载的脚本
+echo "$MSG_EXECUTE_ZOUXIAN"
+# Execute the downloaded script
 sudo /usr/local/bin/zouxian
 
 echo ""
 echo "=============================================="
-echo "6. 请检查 Apple 智能状态"
-echo "重要：现在请去 '系统设置' -> 'Apple 智能' 或 'Siri' 检查'Apple智能'选项是否已经出现。"
-echo "如果 'Apple 智能' **已经出现**，请在下面输入 Y。"
-echo "如果 'Apple 智能' **没有出现**，请在下面输入 N。"
+echo "$MSG_CHECK_AI_TITLE"
+echo "$MSG_CHECK_AI_INSTR_1"
+echo "$MSG_CHECK_AI_INSTR_2"
+echo "$MSG_CHECK_AI_INSTR_3"
 echo "=============================================="
 
-# 使用 < /dev/tty 强制从终端读取输入，解决管道执行时 read 不暂停的问题
-read -r -p "请确认 Apple 智能是否已出现或部分功能已启用 (Y/N): " user_confirmation < /dev/tty
+# Use < /dev/tty to force reading input from the terminal, fixing the issue with read not pausing when executed via pipe
+read -r -p "$MSG_CHECK_AI_PROMPT" user_confirmation < /dev/tty
 
-# 暂时解锁plist
-sudo chflags nouchg "$ELIGIBILITY_PLIST"
-
-# 7. 根据用户反馈进行后续处理
+# 7. Process based on user confirmation
 if [[ "$user_confirmation" =~ ^[Yy]$ ]]; then
-    # --- 用户确认成功路径 ---
+    # --- User confirmed success path ---
     echo ""
     echo "=============================================="
-    echo "用户确认成功，正在完成设置并锁定文件..."
+    echo "$MSG_SUCCESS_CONFIRMED_START"
 
-    # 设置文件权限为 444 (只读)
-    echo "设置 $ELIGIBILITY_DIR/* 的权限为 444 (只读)..."
+    # Set file permissions to 444 (read-only)
+    echo "$MSG_SET_PERMS_444"
     sudo chmod 444 "$ELIGIBILITY_DIR"/*
 
-    # 设置 immutable (uchg) 标记
-    echo "设置 $ELIGIBILITY_DIR/* 的 immutable (uchg) 标记..."
+    # Set immutable (uchg) flag
+    echo "$MSG_SET_UCHG"
     sudo chflags uchg "$ELIGIBILITY_DIR"/*
-    echo "文件锁定完成。"
+    echo "$MSG_FILE_LOCK_COMPLETE"
 
-    # 清理备份文件
-    echo "清理备份文件 $PLIST_BACKUP..."
-    sudo rm -f "$PLIST_BACKUP" # 使用 -f 忽略文件不存在的错误
+    # Clean up backup file
+    echo "$MSG_CLEANUP_BACKUP"
+    sudo rm -f "$PLIST_BACKUP" # Use -f to ignore errors if file doesn't exist
 
     echo ""
-    echo "操作已完成。"
-    echo "请立即重启你的电脑。"
-    echo "重启后，再次检查 Apple 智能状态。"
-    echo "如果 Apple 智能仍为开启，并且你希望恢复系统的安全性，强烈建议你再次进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
+    echo "$MSG_OPERATION_COMPLETE"
+    echo "$MSG_RESTART_NOW"
+    echo "$MSG_CHECK_AI_AGAIN"
+    echo "$MSG_RECOMMEND_RE_ENABLE_SIP"
     echo "=============================================="
 
 else
-    # --- 用户确认失败路径 ---
+    # --- User confirmed failure path ---
     echo ""
     echo "=============================================="
-    echo "用户确认失败，正在恢复文件到修改前状态..."
+    echo "$MSG_FAILURE_CONFIRMED_START"
 
-    # 恢复原始 plist 文件
+    # Restore original plist file
     if [ -f "$PLIST_BACKUP" ]; then
-        echo "正在从备份文件 $PLIST_BACKUP 恢复原始文件 $ELIGIBILITY_PLIST ..."
-        # 先尝试删除可能被修改的文件
+        echo "$MSG_RESTORE_START"
+        # First attempt to remove the potentially modified file
         sudo rm -f "$ELIGIBILITY_PLIST"
-        # 恢复备份文件
+        # Restore the backup file
         sudo cp "$PLIST_BACKUP" "$ELIGIBILITY_PLIST"
         if [ $? -ne 0 ]; then
-            echo "警告：未能从备份文件恢复 $ELIGIBILITY_PLIST。可能需要手动恢复！"
+            echo "$MSG_RESTORE_WARNING_FAILED $MSG_RESTORE_WARNING_MANUAL"
         else
-             echo "$ELIGIBILITY_PLIST 恢复完成。"
+             echo "$MSG_RESTORE_COMPLETE"
         fi
     else
-        echo "警告：备份文件 $PLIST_BACKUP 未找到。无法恢复 $ELIGIBILITY_PLIST 文件内容。"
+        echo "$MSG_RESTORE_WARNING_NOT_FOUND"
     fi
 
-    # 恢复文件权限为 444 (只读，一个安全的默认状态)
-    echo "设置 $ELIGIBILITY_DIR/* 的权限为 444 (只读)..."
+    # Restore file permissions to 444 (read-only, a safe default state)
+    echo "$MSG_SET_PERMS_444"
     sudo chmod 444 "$ELIGIBILITY_DIR"/*
 
-    # 确保没有uchg标记 (可能在前一次尝试失败时设置了uchg)
+    # Ensure uchg flag is removed (in case it was set during a previous failed attempt)
     sudo chflags nouchg "$ELIGIBILITY_DIR"/* || true
 
-    # 清理备份文件
-    echo "清理备份文件 $PLIST_BACKUP..."
-    sudo rm -f "$PLIST_BACKUP" # 使用 -f 忽略文件不存在的错误
+    # Clean up backup file
+    echo "$MSG_CLEANUP_BACKUP"
+    sudo rm -f "$PLIST_BACKUP" # Use -f to ignore errors if file doesn't exist
 
     echo ""
-    echo "Apple 智能启用尝试失败。请考虑以下步骤："
-    echo "1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
-    echo "2. 向第三方脚本作者反馈问题: https://github.com/CatMe0w/zouxian/issues"
-    echo "3. 为了系统安全，强烈建议你重启后进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
+    echo "$MSG_FAILURE_CONSIDER_STEPS"
+    echo "$MSG_FAILURE_STEP_1"
+    echo "$MSG_FAILURE_STEP_2"
+    echo "$MSG_FAILURE_STEP_3"
     echo "=============================================="
 
 fi
 
-# 8. 清理下载的 zouxian 脚本 (在成功或失败后都会执行)
-echo "清理临时脚本 /usr/local/bin/zouxian..."
+# 8. Clean up the downloaded zouxian script (executed in both success and failure paths)
+echo "$MSG_CLEANUP_ZOUXIAN_START"
 sudo rm -f /usr/local/bin/zouxian
-echo "清理完成。"
+echo "$MSG_CLEANUP_COMPLETE"
 
 echo ""
 echo "=============================================="
-echo "脚本执行结束。"
+echo "$MSG_SCRIPT_END"
+echo "$MSG_DISCLAIMER"
 echo "=============================================="
 
-exit 0 
+exit 0
