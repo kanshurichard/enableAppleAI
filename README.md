@@ -2,10 +2,21 @@
 
 一种在MacOS 15.4.1（目前测试15.5 beta 4/public beta3也可）上，无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
 
-本脚本同时尝试开启了“登录非AI启用区Apple ID账号（如中国区）”及“外置硬盘安装macOS”的Apple AI支持，但由于本人没有相关设备/账号，欢迎反馈你的测试结果。
+**2.0版本已上线，支持相册的“消除（Clean Up）”功能开启！**
+
+如果使用2.0版本遇到问题，请回退到旧的1.0版本（enable_ai_old.sh）再试试。
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
+TODO：
+目前尚不知道能否实现的功能：
+- 登录非AI启用区Apple ID账号（如中国区）时
+- 外置硬盘安装macOS时
+- 系统语言与Siri语言不一致时
+
+在`/private/var/db/eligibilityd/eligibility.plist` 这个系统文件中，有相关的代码，但目前还不知道要怎么改，才能去掉这些限制。
+
+由于本人没有相关设备/账号，欢迎你根据现有代码进行尝试，并反馈你的测试结果。
 
 ## 工作原理概述
 
