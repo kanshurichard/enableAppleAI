@@ -51,7 +51,7 @@ sudo /usr/local/bin/zouxian
 echo ""
 echo "=============================================="
 echo "3. 请检查 Apple 智能状态"
-echo "请现在去 '系统设置' -> '通用' -> 'Apple 智能' 检查是否已经显示为开启状态。"
+echo "请现在去 '系统设置' -> 'Apple 智能'或'Siri' 检查'Apple智能'是否已经显示为开启状态。"
 echo "如果 'Apple 智能' 已经显示为开启，请继续按任意键。"
 echo "如果 'Apple 智能' 没有显示为开启，请不要继续，并在以下地址向该第三方脚本作者反馈问题："
 echo "GitHub Issues: https://github.com/CatMe0w/zouxian/issues"
