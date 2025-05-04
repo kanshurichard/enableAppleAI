@@ -11,7 +11,7 @@ echo "=============================================="
 echo "正在检测 System Integrity Protection (SIP) 状态..."
 sip_status=$(csrutil status)
 
-if [[ $sip_status == *"System Integrity Protection status: enabled"* ]]; then
+if [[ $sip_status != *"System Integrity Protection status: disabled"* ]]; then
     echo "SIP (System Integrity Protection) 当前已启用。"
     echo "必须禁用 SIP 才能继续。"
     echo "请按照以下步骤操作："
