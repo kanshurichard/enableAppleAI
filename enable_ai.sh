@@ -15,7 +15,7 @@ if [[ $sip_status == *"System Integrity Protection status: enabled"* ]]; then
     echo "SIP (System Integrity Protection) 当前已启用。"
     echo "必须禁用 SIP 才能继续。"
     echo "请按照以下步骤操作："
-    echo "1. 重启 Mac，并在启动时按住 Command + R 进入恢复模式。"
+    echo "1. 重启 Mac，并长按开机键进入恢复模式。"
     echo "2. 在恢复模式菜单栏中选择 '实用工具' -> '终端'。"
     echo "3. 在终端中输入 'csrutil disable' 并按回车。"
     echo "4. 输入 'reboot' 并按回车重启 Mac。"
