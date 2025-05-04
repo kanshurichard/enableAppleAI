@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script V2.0 by KanShuRichard"
-echo "        macOS Apple 智能启用辅助脚本 V2.0 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.0 by KanShuRichard"
+echo "           macOS Apple 智能启用辅助脚本 2.0 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -20,10 +20,6 @@ echo ""
 while true; do
     read -r -p "Enter choice/输入你的选择 (默认为中文): " lang_choice < /dev/tty
     case "$lang_choice" in
-        1)
-            LANG="zh"
-            break # Exit the loop
-            ;;
         2)
             LANG="en"
             break # Exit the loop
@@ -60,8 +56,9 @@ MSG_WRITE_PERMISSION_ERROR=""
 MSG_BACKUP_START=""
 MSG_BACKUP_ERROR=""
 MSG_BACKUP_COMPLETE=""
-MSG_MODIFY_PLIST_START=""
-MSG_MODIFY_PLIST_COMPLETE=""
+MSG_MODIFY_PLIST_START_1="" # Message for modifying the first plist
+MSG_MODIFY_PLIST_START_2="" # Message for modifying the second plist
+MSG_MODIFY_PLISTS_COMPLETE="" # Message for modifying both plists complete
 MSG_DOWNLOAD_ZOUXIAN_START=""
 MSG_DOWNLOAD_ZOUXIAN_ERROR=""
 MSG_CHMOD_ZOUXIAN=""
@@ -75,13 +72,14 @@ MSG_SUCCESS_CONFIRMED_START=""
 MSG_SET_PERMS_444=""
 MSG_SET_UCHG=""
 MSG_FILE_LOCK_COMPLETE=""
-MSG_CLEANUP_BACKUP=""
+MSG_CLEANUP_BACKUPS="" # Message for cleaning up both backups
 MSG_OPERATION_COMPLETE=""
 MSG_RESTART_NOW=""
 MSG_CHECK_AI_AGAIN=""
 MSG_RECOMMEND_RE_ENABLE_SIP=""
 MSG_FAILURE_CONFIRMED_START=""
-MSG_RESTORE_START=""
+MSG_RESTORE_START_1="" # Message for restoring the first plist
+MSG_RESTORE_START_2="" # Message for restoring the second plist
 MSG_RESTORE_WARNING_FAILED=""
 MSG_RESTORE_WARNING_MANUAL=""
 MSG_RESTORE_COMPLETE=""
@@ -114,14 +112,15 @@ case "$LANG" in
         MSG_SIP_ENABLED_5="After disabling SIP, please run this script again."
         MSG_SIP_DISABLED="SIP (System Integrity Protection) is disabled, proceeding."
         MSG_START_STEPS="Starting Apple Intelligence enablement attempt steps..."
-        MSG_PREPARE_MODIFY="Preparing to modify system file $ELIGIBILITY_PLIST ..."
-        MSG_UNLOCK_PERMS="Removing immutable (uchg) flag and setting permissions to 777 for files in $ELIGIBILITY_DIR/..."
-        MSG_WRITE_PERMISSION_ERROR="Error: Failed to get write permission for $ELIGIBILITY_PLIST. Please confirm SIP is disabled."
-        MSG_BACKUP_START="Backing up original file $ELIGIBILITY_PLIST to $PLIST_BACKUP ..."
-        MSG_BACKUP_ERROR="Error: Failed to successfully back up $ELIGIBILITY_PLIST file. Check permissions or disk space."
+        MSG_PREPARE_MODIFY="Preparing to modify system files..."
+        MSG_UNLOCK_PERMS="Removing immutable (uchg) flag and setting permissions to 777 for files in system eligibility directories..."
+        MSG_WRITE_PERMISSION_ERROR="Error: Failed to get write permission for a necessary plist file. Please confirm SIP is disabled."
+        MSG_BACKUP_START="Backing up original file " # Will append filename
+        MSG_BACKUP_ERROR="Error: Failed to successfully back up " # Will append filename
         MSG_BACKUP_COMPLETE="Backup complete."
-        MSG_MODIFY_PLIST_START="Modifying specific keys in $ELIGIBILITY_PLIST ..."
-        MSG_MODIFY_PLIST_COMPLETE="$ELIGIBILITY_PLIST modification complete."
+        MSG_MODIFY_PLIST_START_1="Modifying keys in $ELIGIBILITY_PLIST ..."
+        MSG_MODIFY_PLIST_START_2="Modifying key in $OS_ELIGIBILITY_PLIST ..."
+        MSG_MODIFY_PLISTS_COMPLETE="All necessary plist modifications complete."
         MSG_DOWNLOAD_ZOUXIAN_START="Downloading and installing third-party script zouxian.sh..."
         MSG_DOWNLOAD_ZOUXIAN_ERROR="Error: Third-party script download failed. Check network connection or GitHub repository availability."
         MSG_CHMOD_ZOUXIAN="Granting script execution permission..."
@@ -132,20 +131,21 @@ case "$LANG" in
         MSG_CHECK_AI_INSTR_3="If 'Apple Intelligence' **does not appear**, or no AI features are evident, please enter N to exit and report."
         MSG_CHECK_AI_PROMPT="Confirm if Apple Intelligence appeared or partial functionality is enabled (Y/N): "
         MSG_SUCCESS_CONFIRMED_START="User confirmed success, completing setup and locking files..."
-        MSG_SET_PERMS_444="Setting permissions for $ELIGIBILITY_DIR/* to 444 (read-only)..."
-        MSG_SET_UCHG="Setting immutable (uchg) flag for $ELIGIBILITY_DIR/*..."
+        MSG_SET_PERMS_444="Setting permissions for eligibility files to 444 (read-only)..."
+        MSG_SET_UCHG="Setting immutable (uchg) flag for eligibility files..."
         MSG_FILE_LOCK_COMPLETE="File locking complete."
-        MSG_CLEANUP_BACKUP="Cleaning up backup file $PLIST_BACKUP..."
+        MSG_CLEANUP_BACKUPS="Cleaning up backup files..."
         MSG_OPERATION_COMPLETE="Operation completed."
         MSG_RESTART_NOW="Please restart your computer immediately."
         MSG_CHECK_AI_AGAIN="After restarting, check Apple Intelligence status again."
         MSG_RECOMMEND_RE_ENABLE_SIP="If Apple Intelligence remains enabled and you wish to restore system security, it is strongly recommended to enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
         MSG_FAILURE_CONFIRMED_START="User confirmed failure, restoring files to previous state..."
-        MSG_RESTORE_START="Restoring original file $ELIGIBILITY_PLIST from backup file $PLIST_BACKUP ..."
-        MSG_RESTORE_WARNING_FAILED="Warning: Failed to restore $ELIGIBILITY_PLIST from backup."
+        MSG_RESTORE_START_1="Restoring original file $ELIGIBILITY_PLIST from backup file $PLIST_BACKUP ..."
+        MSG_RESTORE_START_2="Restoring original file $OS_ELIGIBILITY_PLIST from backup file $OS_PLIST_BACKUP ..."
+        MSG_RESTORE_WARNING_FAILED="Warning: Failed to restore " # Will append filename
         MSG_RESTORE_WARNING_MANUAL="Manual intervention may be required!"
-        MSG_RESTORE_COMPLETE="$ELIGIBILITY_PLIST restore complete."
-        MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file $PLIST_BACKUP not found. Cannot restore $ELIGIBILITY_PLIST file content."
+        MSG_RESTORE_COMPLETE=" restore complete." # Prepended by filename
+        MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file " # Will append filename
         MSG_ENSURE_NO_UCHG="Ensuring uchg flag is removed..."
         MSG_FAILURE_CONSIDER_STEPS="Apple Intelligence enablement attempt failed. Please consider the following steps:"
         MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta)."
@@ -171,14 +171,15 @@ case "$LANG" in
         MSG_SIP_ENABLED_5="SIP 禁用后，请再次运行此脚本。"
         MSG_SIP_DISABLED="SIP (System Integrity Protection) 已禁用，可以继续。"
         MSG_START_STEPS="开始执行 Apple Intelligence 启用尝试步骤..."
-        MSG_PREPARE_MODIFY="正在准备修改系统文件 $ELIGIBILITY_PLIST ..."
-        MSG_UNLOCK_PERMS="正在删除 /private/var/db/eligibilityd/ 目录下文件的 immutable (uchg) 标记并设置权限为 777..."
-        MSG_WRITE_PERMISSION_ERROR="错误：未能获得 $ELIGIBILITY_PLIST 文件的写入权限。请再次确认已禁用 SIP。"
-        MSG_BACKUP_START="正在备份原始文件 $ELIGIBILITY_PLIST 到 $PLIST_BACKUP ..."
-        MSG_BACKUP_ERROR="错误：未能成功备份 $ELIGIBILITY_PLIST 文件。请检查权限或磁盘空间。"
+        MSG_PREPARE_MODIFY="正在准备修改系统文件..."
+        MSG_UNLOCK_PERMS="正在删除 /private/var/db/eligibilityd/ 和 /private/var/db/os_eligibility/ 目录下文件的 immutable (uchg) 标记并设置权限为 777..."
+        MSG_WRITE_PERMISSION_ERROR="错误：未能获得必要的 plist 文件的写入权限。请再次确认已禁用 SIP。"
+        MSG_BACKUP_START="正在备份原始文件 "
+        MSG_BACKUP_ERROR="错误：未能成功备份 "
         MSG_BACKUP_COMPLETE="备份完成。"
-        MSG_MODIFY_PLIST_START="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
-        MSG_MODIFY_PLIST_COMPLETE="$ELIGIBILITY_PLIST 修改完成。"
+        MSG_MODIFY_PLIST_START_1="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
+        MSG_MODIFY_PLIST_START_2="正在修改 $OS_ELIGIBILITY_PLIST 中的特定键值..."
+        MSG_MODIFY_PLISTS_COMPLETE="所有必要的 plist 文件修改完成。"
         MSG_DOWNLOAD_ZOUXIAN_START="正在下载并安装第三方脚本 zouxian.sh..."
         MSG_DOWNLOAD_ZOUXIAN_ERROR="错误：第三方脚本下载失败。请检查网络连接或 GitHub 仓库是否可用。"
         MSG_CHMOD_ZOUXIAN="赋予脚本执行权限..."
@@ -189,20 +190,21 @@ case "$LANG" in
         MSG_CHECK_AI_INSTR_3="如果 'Apple 智能' **没有出现**，或者没有任何迹象表明功能已启用，请在下面输入 N。"
         MSG_CHECK_AI_PROMPT="请确认 Apple 智能是否已出现或部分功能已启用 (Y/N): "
         MSG_SUCCESS_CONFIRMED_START="用户确认成功，正在完成设置并锁定文件..."
-        MSG_SET_PERMS_444="设置 $ELIGIBILITY_DIR/* 的权限为 444 (只读)..."
-        MSG_SET_UCHG="设置 $ELIGIBILITY_DIR/* 的 immutable (uchg) 标记..."
+        MSG_SET_PERMS_444="设置 eligibility 文件权限为 444 (只读)..."
+        MSG_SET_UCHG="设置 eligibility 文件的 immutable (uchg) 标记..."
         MSG_FILE_LOCK_COMPLETE="文件锁定完成。"
-        MSG_CLEANUP_BACKUP="清理备份文件 $PLIST_BACKUP..."
+        MSG_CLEANUP_BACKUPS="清理备份文件..."
         MSG_OPERATION_COMPLETE="操作已完成。"
         MSG_RESTART_NOW="请立即重启你的电脑。"
         MSG_CHECK_AI_AGAIN="重启后，再次检查 Apple 智能状态。"
         MSG_RECOMMEND_RE_ENABLE_SIP="如果 Apple 智能仍为开启，并且你希望恢复系统的安全性，强烈建议你再次进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
         MSG_FAILURE_CONFIRMED_START="用户确认失败，正在恢复文件到修改前状态..."
-        MSG_RESTORE_START="正在从备份文件 $PLIST_BACKUP 恢复原始文件 $ELIGIBILITY_PLIST ..."
-        MSG_RESTORE_WARNING_FAILED="警告：未能从备份文件恢复 $ELIGIBILITY_PLIST。"
+        MSG_RESTORE_START_1="正在从备份文件 $PLIST_BACKUP 恢复原始文件 $ELIGIBILITY_PLIST ..."
+        MSG_RESTORE_START_2="正在从备份文件 $OS_PLIST_BACKUP 恢复原始文件 $OS_ELIGIBILITY_PLIST ..."
+        MSG_RESTORE_WARNING_FAILED="警告：未能从备份文件恢复 "
         MSG_RESTORE_WARNING_MANUAL="可能需要手动恢复！"
-        MSG_RESTORE_COMPLETE="$ELIGIBILITY_PLIST 恢复完成。"
-        MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 $PLIST_BACKUP 未找到。无法恢复 $ELIGIBILITY_PLIST 文件内容。"
+        MSG_RESTORE_COMPLETE=" 恢复完成。"
+        MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 "
         MSG_ENSURE_NO_UCHG="确保没有uchg标记..."
         MSG_FAILURE_CONSIDER_STEPS="Apple 智能启用尝试失败。请考虑以下步骤："
         MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
@@ -222,6 +224,12 @@ esac
 ELIGIBILITY_PLIST="/private/var/db/eligibilityd/eligibility.plist"
 ELIGIBILITY_DIR="/private/var/db/eligibilityd"
 PLIST_BACKUP="/tmp/eligibility.plist.bak" # Backup file path
+
+OS_ELIGIBILITY_PLIST="/private/var/db/os_eligibility/eligibility.plist" # Second plist path
+OS_ELIGIBILITY_DIR="/private/var/db/os_eligibility" # Second plist directory
+OS_PLIST_BACKUP="/tmp/os_eligibility.plist.bak" # Second backup file path
+
+
 PLISTBUDDY="/usr/libexec/PlistBuddy" # PlistBuddy tool path
 
 # Check if PlistBuddy exists
@@ -262,43 +270,60 @@ echo "$MSG_START_STEPS"
 # --- Prepare to modify files ---
 echo "$MSG_PREPARE_MODIFY"
 
-# 2. Unlock and set file permissions to 777
+# 2. Unlock and set file permissions to 777 for both directories
 echo "$MSG_UNLOCK_PERMS"
-# Remove uchg flag (ignore errors as file might not have the flag)
-sudo chflags nouchg "$ELIGIBILITY_DIR"/* || true
-# Set permissions to 777
-sudo chmod 777 "$ELIGIBILITY_DIR"/*
+# Remove uchg flag (ignore errors as file might not have the flag) for both
+sudo chflags nouchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/* || true
+# Set permissions to 777 for both
+sudo chmod 777 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
 
-# Ensure plist file is writable
-if [ ! -w "$ELIGIBILITY_PLIST" ]; then
+# Ensure both plist files are writable
+if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
     echo "$MSG_WRITE_PERMISSION_ERROR"
     exit 1
 fi
 
-# 3. Backup original plist file
-echo "$MSG_BACKUP_START"
+# 3. Backup original plist files
+echo "$MSG_BACKUP_START$ELIGIBILITY_PLIST to $PLIST_BACKUP ..."
 sudo cp "$ELIGIBILITY_PLIST" "$PLIST_BACKUP"
 if [ $? -ne 0 ]; then
-    echo "$MSG_BACKUP_ERROR"
+    echo "$MSG_BACKUP_ERROR$ELIGIBILITY_PLIST file. $MSG_RESTORE_WARNING_MANUAL"
+    exit 1 # Failure to backup is critical, must exit
+fi
+
+echo "$MSG_BACKUP_START$OS_ELIGIBILITY_PLIST to $OS_PLIST_BACKUP ..."
+sudo cp "$OS_ELIGIBILITY_PLIST" "$OS_PLIST_BACKUP"
+if [ $? -ne 0 ]; then
+    echo "$MSG_BACKUP_ERROR$OS_ELIGIBILITY_PLIST file. $MSG_RESTORE_WARNING_MANUAL"
+     # Clean up the first backup if the second one fails
+    sudo rm -f "$PLIST_BACKUP"
     exit 1 # Failure to backup is critical, must exit
 fi
 echo "$MSG_BACKUP_COMPLETE"
 
-# 4. Modify plist file content
-echo "$MSG_MODIFY_PLIST_START"
-# Use PlistBuddy to set values (change 3 to 2)
+# 4. Modify plist file contents
+echo "$MSG_MODIFY_PLIST_START_1"
+# Use PlistBuddy to set values (change 3 to 2) in the first plist
 # Note: PlistBuddy path checked/set at the beginning of the script
 
 # Modify values under OS_ELIGIBILITY_DOMAIN_GREYMATTER
-$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST"
-$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST"
-$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
-$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST"
+# Add || true to prevent script exit if the key does not exist
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST" || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST" || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST" || true
 
 # Modify values under OS_ELIGIBILITY_DOMAIN_CALCIUM
-$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
+# Add || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
 
-echo "$MSG_MODIFY_PLIST_COMPLETE"
+echo "$MSG_MODIFY_PLIST_START_2"
+# Use PlistBuddy to set the value in the second plist
+# Add || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+
+echo "$MSG_MODIFY_PLISTS_COMPLETE"
+
 
 # 5. Download and execute third-party script zouxian (Moved later in sequence)
 echo "$MSG_DOWNLOAD_ZOUXIAN_START"
@@ -308,8 +333,8 @@ sudo curl https://raw.githubusercontent.com/CatMe0w/zouxian/master/zouxian.sh -o
 # Ensure download was successful
 if [ ! -f "/usr/local/bin/zouxian" ]; then
     echo "$MSG_DOWNLOAD_ZOUXIAN_ERROR"
-    # Clean up backup file if download fails before entering success/failure logic
-    sudo rm -f "$PLIST_BACKUP"
+    # Clean up backup files if download fails before entering success/failure logic
+    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP"
     exit 1 # Exit script
 fi
 
@@ -338,18 +363,18 @@ if [[ "$user_confirmation" =~ ^[Yy]$ ]]; then
     echo "=============================================="
     echo "$MSG_SUCCESS_CONFIRMED_START"
 
-    # Set file permissions to 444 (read-only)
+    # Set file permissions to 444 (read-only) for both directories
     echo "$MSG_SET_PERMS_444"
-    sudo chmod 444 "$ELIGIBILITY_DIR"/*
+    sudo chmod 444 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
 
-    # Set immutable (uchg) flag
+    # Set immutable (uchg) flag for both directories
     echo "$MSG_SET_UCHG"
-    sudo chflags uchg "$ELIGIBILITY_DIR"/*
+    sudo chflags uchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
     echo "$MSG_FILE_LOCK_COMPLETE"
 
-    # Clean up backup file
-    echo "$MSG_CLEANUP_BACKUP"
-    sudo rm -f "$PLIST_BACKUP" # Use -f to ignore errors if file doesn't exist
+    # Clean up backup files
+    echo "$MSG_CLEANUP_BACKUPS"
+    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP" # Use -f to ignore errors if files don't exist
 
     echo ""
     echo "$MSG_OPERATION_COMPLETE"
@@ -364,32 +389,47 @@ else
     echo "=============================================="
     echo "$MSG_FAILURE_CONFIRMED_START"
 
-    # Restore original plist file
+    # Restore original plist files
+    # Restore the first plist
     if [ -f "$PLIST_BACKUP" ]; then
-        echo "$MSG_RESTORE_START"
-        # First attempt to remove the potentially modified file
+        echo "$MSG_RESTORE_START_1"
         sudo rm -f "$ELIGIBILITY_PLIST"
-        # Restore the backup file
         sudo cp "$PLIST_BACKUP" "$ELIGIBILITY_PLIST"
         if [ $? -ne 0 ]; then
-            echo "$MSG_RESTORE_WARNING_FAILED $MSG_RESTORE_WARNING_MANUAL"
+            echo "$MSG_RESTORE_WARNING_FAILED$ELIGIBILITY_PLIST. $MSG_RESTORE_WARNING_MANUAL"
         else
-             echo "$MSG_RESTORE_COMPLETE"
+             echo "$ELIGIBILITY_PLIST$MSG_RESTORE_COMPLETE"
         fi
     else
-        echo "$MSG_RESTORE_WARNING_NOT_FOUND"
+        echo "$MSG_RESTORE_WARNING_NOT_FOUND$PLIST_BACKUP. Cannot restore $ELIGIBILITY_PLIST file content."
     fi
 
-    # Restore file permissions to 444 (read-only, a safe default state)
+    # Restore the second plist
+    if [ -f "$OS_PLIST_BACKUP" ]; then
+        echo "$MSG_RESTORE_START_2"
+        sudo rm -f "$OS_ELIGIBILITY_PLIST"
+        sudo cp "$OS_PLIST_BACKUP" "$OS_ELIGIBILITY_PLIST"
+        if [ $? -ne 0 ]; then
+            echo "$MSG_RESTORE_WARNING_FAILED$OS_ELIGIBILITY_PLIST. $MSG_RESTORE_WARNING_MANUAL"
+        else
+             echo "$OS_ELIGIBILITY_PLIST$MSG_RESTORE_COMPLETE"
+        fi
+    else
+        echo "$MSG_RESTORE_WARNING_NOT_FOUND$OS_PLIST_BACKUP. Cannot restore $OS_ELIGIBILITY_PLIST file content."
+    fi
+
+
+    # Restore file permissions to 444 (read-only, a safe default state) for both directories
     echo "$MSG_SET_PERMS_444"
-    sudo chmod 444 "$ELIGIBILITY_DIR"/*
+    sudo chmod 444 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
 
-    # Ensure uchg flag is removed (in case it was set during a previous failed attempt)
-    sudo chflags nouchg "$ELIGIBILITY_DIR"/* || true
+    # Ensure uchg flag is removed (in case it was set during a previous failed attempt) for both directories
+    echo "$MSG_ENSURE_NO_UCHG"
+    sudo chflags nouchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/* || true
 
-    # Clean up backup file
-    echo "$MSG_CLEANUP_BACKUP"
-    sudo rm -f "$PLIST_BACKUP" # Use -f to ignore errors if file doesn't exist
+    # Clean up backup files
+    echo "$MSG_CLEANUP_BACKUPS"
+    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP" # Use -f to ignore errors if files don't exist
 
     echo ""
     echo "$MSG_FAILURE_CONSIDER_STEPS"
@@ -408,7 +448,7 @@ echo "$MSG_CLEANUP_COMPLETE"
 echo ""
 echo "=============================================="
 echo "$MSG_SCRIPT_END"
-echo "$MSG_DISCLAIMER"
+echo "$MSG_DISCLAIMER" # Add disclaimer at the very end
 echo "=============================================="
 
 exit 0
