@@ -85,10 +85,11 @@ if [ ! -f "$PLISTBUDDY" ]; then
 fi
 
 # 修改 OS_ELIGIBILITY_DOMAIN_GREYMATTER 下的值
+$PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" /private/var/db/eligibilityd/eligibility.plist
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" /private/var/db/eligibilityd/eligibility.plist
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" /private/var/db/eligibilityd/eligibility.plist
 
-# 修改 OS_ELIGIBILITY_DOMAIN_CALCIUM 下的值 (根据提供的 plist，OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 已经是 2，但按要求执行修改)
+# 修改 OS_ELIGIBILITY_DOMAIN_CALCIUM 下的值
 $PLISTBUDDY -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" /private/var/db/eligibilityd/eligibility.plist
 
 echo "eligibility.plist 修改完成。"
