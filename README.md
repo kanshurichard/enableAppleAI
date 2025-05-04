@@ -65,6 +65,11 @@ TODO：
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
 
+**如果在国内访问困难，请尝试以下国内加速地址：**
+```bash
+curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.sh | bash
+```
+
 **手动执行脚本:**
 
 1.  打开 **终端 (Terminal)** 应用程序。
