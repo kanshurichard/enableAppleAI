@@ -69,9 +69,9 @@ echo "=============================================="
 echo "继续修改 eligibility.plist 文件..."
 
 # 4. 修改文件权限以允许写入
-echo "正在修改 /private/var/db/eligibilityd/eligibility.plist 的权限为 777..."
+echo "正在修改 /private/var/db/eligibilityd/ 下所有文件的权限为 777..."
 # 使用 sudo 修改文件权限
-sudo chmod 777 /private/var/db/eligibilityd/eligibility.plist
+sudo chmod 777 /private/var/db/eligibilityd/*
 
 # 确保文件存在且权限修改成功
 if [ ! -w "/private/var/db/eligibilityd/eligibility.plist" ]; then
