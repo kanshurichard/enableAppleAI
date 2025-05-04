@@ -46,7 +46,7 @@
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kanshurichard/enableAI/main/enable_ai.sh | bash
+curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
 
 **手动执行脚本:**
@@ -54,7 +54,7 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAI/main/enable_ai
 1.  打开 **终端 (Terminal)** 应用程序。
 2.  使用 `curl` 下载脚本文件到当前目录：
     ```bash
-    curl -O https://raw.githubusercontent.com/kanshurichard/enableAI/main/enable_ai.sh
+    curl -O https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh
     ```
 3.  **审查脚本内容：** 使用文本编辑器或命令行工具（如 `cat enable_ai.sh`）仔细阅读下载的 `enable_ai.sh` 文件，确保您理解它将执行的操作。
 4.  赋予脚本执行权限：
