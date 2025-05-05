@@ -96,8 +96,8 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 
 脚本运行过程中会输出当前执行的步骤，并可能在某个阶段暂停，提示您去“系统设置”中检查 Apple 智能是否已经显示为开启状态。
 
-* 如果 Apple 智能已经显示，请按 Enter 键继续脚本的剩余部分。
-* 如果 Apple 智能未显示为开启，脚本会提示您不要继续，并建议您向第三方脚本 `zouxian` 的作者反馈问题。此时请按 `Ctrl + C` 终止脚本。
+* 如果 Apple 智能已经显示，请按 Y 键继续脚本的剩余部分。
+* 如果 Apple 智能未显示为开启，请按 N 键，脚本会自动恢复所有已有的修改。之后您可以重试一次，或来这里提交Issues。
 
 ### 步骤 4: 重启并最终确认
 
