@@ -114,7 +114,7 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 
 ## 常见问题
 
-**如何卸载？**  
+**问：如何卸载？**  
 答：只要在关闭SIP后，重新运行一遍脚本，到了问你是否看到AI功能出现的那一步，按“N”选否，脚本就会自动解锁所有已锁定文件。再次重启电脑后，系统就会自动用原始系统文件替代修改后的文件，相当于卸载所有对系统的更改。此时可以重新开启SIP。
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
