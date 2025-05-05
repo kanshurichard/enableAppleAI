@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.1 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 2.1 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.11 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 2.11 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -140,7 +140,7 @@ case "$LANG" in
         MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file " # Will append filename
         MSG_ENSURE_NO_UCHG="Ensuring uchg flag is removed..."
         MSG_FAILURE_CONSIDER_STEPS="Apple Intelligence enablement attempt failed. Please consider the following steps:"
-        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta 4)."
+        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta)."
         MSG_FAILURE_STEP_2="2. Report the issue to the relevant community/repository." # Modified to be generic
         MSG_FAILURE_STEP_3="3. For system security, it is strongly recommended to restart and enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
         MSG_SCRIPT_END="Script execution finished."
@@ -194,7 +194,7 @@ case "$LANG" in
         MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 "
         MSG_ENSURE_NO_UCHG="确保没有uchg标记..."
         MSG_FAILURE_CONSIDER_STEPS="Apple 智能启用尝试失败。请考虑以下步骤："
-        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta 4)。"
+        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
         MSG_FAILURE_STEP_2="2. 向相关社区/仓库反馈问题。" # Modified to be generic
         MSG_FAILURE_STEP_3="3. 为了系统安全，强烈建议你重启后进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
         MSG_SCRIPT_END="脚本执行结束。"
@@ -319,13 +319,15 @@ echo "$MSG_EXECUTE_ZOUXIAN" # Use the updated message
 MAX_WAIT_TIME=60
 CHECK_INTERVAL=1
 SECONDS_PASSED=0
-PATCH_SUCCESS=1 # Variable to track if the patch was successfully applied (0 = success, 1 = failure)
+PROCESS_FOUND=0 # Flag to indicate if eligibilityd was found (0=not found, 1=found)
 
 while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
   PID=$(pgrep eligibilityd)
   if [ ! -z "$PID" ]; then
     echo "eligibilityd found with PID $PID"
-	
+    PROCESS_FOUND=1 # Mark that the process was found
+    # Use sudo for lldb as it needs elevated privileges to attach to system processes
+    # set -e will cause the script to exit if the sudo lldb command itself fails critically.
     sudo lldb --batch \
     -o "process attach --name eligibilityd" \
     -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
@@ -333,24 +335,23 @@ while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
     -o "process detach" \
     -o quit
 
-    # Check the exit status of the lldb command
-    if [ $? -eq 0 ]; then
-        echo "lldb command succeeded."
-        PATCH_SUCCESS=0
-    else
-        echo "lldb command failed."
-        exit 1
-    fi
+    # If we reach here, the lldb command itself completed (set -e didn't trigger).
+    # Even if lldb exited with a non-zero status for non-critical reasons,
+    # the attempt was made. We can now break the waiting loop.
+    break # Exit the while loop after attempting the lldb patch
   fi
   sleep $CHECK_INTERVAL
   SECONDS_PASSED=$((SECONDS_PASSED + CHECK_INTERVAL))
 done
 
 # Check if the loop finished because it timed out (eligibilityd not found)
-if [ "$PATCH_SUCCESS" -ne 0 ]; then
+if [ "$PROCESS_FOUND" -ne 1 ]; then
   echo "eligibilityd not found after $MAX_WAIT_TIME seconds"
-  exit 1
+  exit 1 # Exit the entire script if eligibilityd was never found within the timeout
 fi
+
+# If we reach this point, it means eligibilityd was found, and the lldb command was attempted.
+# The script will now continue to the next logical step (Step 6), where the user confirms success.
 
 # End of embedded eligibility patch logic
 
