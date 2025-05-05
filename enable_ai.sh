@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.0 by KanShuRichard"
-echo "           macOS Apple 智能启用辅助脚本 2.0 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.1 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 2.1 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -59,10 +59,7 @@ MSG_BACKUP_COMPLETE=""
 MSG_MODIFY_PLIST_START_1="" # Message for modifying the first plist
 MSG_MODIFY_PLIST_START_2="" # Message for modifying the second plist
 MSG_MODIFY_PLISTS_COMPLETE="" # Message for modifying both plists complete
-MSG_DOWNLOAD_ZOUXIAN_START=""
-MSG_DOWNLOAD_ZOUXIAN_ERROR=""
-MSG_CHMOD_ZOUXIAN=""
-MSG_EXECUTE_ZOUXIAN=""
+MSG_EXECUTE_ZOUXIAN="" # Retained message for logical step
 MSG_CHECK_AI_TITLE=""
 MSG_CHECK_AI_INSTR_1=""
 MSG_CHECK_AI_INSTR_2=""
@@ -89,8 +86,6 @@ MSG_FAILURE_CONSIDER_STEPS=""
 MSG_FAILURE_STEP_1=""
 MSG_FAILURE_STEP_2=""
 MSG_FAILURE_STEP_3=""
-MSG_CLEANUP_ZOUXIAN_START=""
-MSG_CLEANUP_COMPLETE=""
 MSG_SCRIPT_END=""
 MSG_DISCLAIMER=""
 
@@ -105,7 +100,7 @@ case "$LANG" in
         MSG_SIP_ENABLED_1="SIP (System Integrity Protection) is currently enabled."
         MSG_SIP_ENABLED_2="SIP must be disabled to continue."
         MSG_SIP_ENABLED_3="Please follow these steps:"
-        MSG_SIP_ENABLED_4_1="1. Restart your Mac and press and hold the power button (for Apple Silicon Macs) or Command + R (for Intel Macs) to enter Recovery Mode."
+        MSG_SIP_ENABLED_4_1="1. Restart your Mac and press and hold the power button to enter Recovery Mode."
         MSG_SIP_ENABLED_4_2="2. In Recovery Mode, select 'Utilities' -> 'Terminal' from the menu bar."
         MSG_SIP_ENABLED_4_3="3. In the Terminal, type 'csrutil disable' and press Enter."
         MSG_SIP_ENABLED_4_4="4. Type 'reboot' and press Enter to restart your Mac."
@@ -121,10 +116,7 @@ case "$LANG" in
         MSG_MODIFY_PLIST_START_1="Modifying keys in $ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLIST_START_2="Modifying key in $OS_ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLISTS_COMPLETE="All necessary plist modifications complete."
-        MSG_DOWNLOAD_ZOUXIAN_START="Downloading and installing third-party script zouxian.sh..."
-        MSG_DOWNLOAD_ZOUXIAN_ERROR="Error: Third-party script download failed. Check network connection or GitHub repository availability."
-        MSG_CHMOD_ZOUXIAN="Granting script execution permission..."
-        MSG_EXECUTE_ZOUXIAN="Executing third-party script zouxian..."
+        MSG_EXECUTE_ZOUXIAN="Executing eligibility patch logic..." # Modified message
         MSG_CHECK_AI_TITLE="6. Check Apple Intelligence Status"
         MSG_CHECK_AI_INSTR_1="Important: Please go to 'System Settings' -> 'Apple Intelligence' or 'Siri' now and check if the 'Apple Intelligence' option appears."
         MSG_CHECK_AI_INSTR_2="If 'Apple Intelligence' **does appear**, or you see signs of AI features (even if the main option is hidden), please enter Y below."
@@ -148,11 +140,9 @@ case "$LANG" in
         MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file " # Will append filename
         MSG_ENSURE_NO_UCHG="Ensuring uchg flag is removed..."
         MSG_FAILURE_CONSIDER_STEPS="Apple Intelligence enablement attempt failed. Please consider the following steps:"
-        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta)."
-        MSG_FAILURE_STEP_2="2. Report the issue to the third-party script author: https://github.com/CatMe0w/zouxian/issues"
-        MSG_FAILURE_STEP_3="3. For system security, it is strongly recommended to restart and enter Recovery Mode to run 'csrutil enable' and re-enable SIP."
-        MSG_CLEANUP_ZOUXIAN_START="Cleaning up temporary script /usr/local/bin/zouxian..."
-        MSG_CLEANUP_COMPLETE="Cleanup complete."
+        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta 4)."
+        MSG_FAILURE_STEP_2="2. Report the issue to the relevant community/repository." # Modified to be generic
+        MSG_FAILURE_STEP_3="3. For system security, it is strongly recommended to restart and enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
         MSG_SCRIPT_END="Script execution finished."
         MSG_DISCLAIMER="Disclaimer: This script modifies system files and may cause instability or unexpected behavior. Use at your own risk."
         ;;
@@ -164,7 +154,7 @@ case "$LANG" in
         MSG_SIP_ENABLED_1="SIP (System Integrity Protection) 当前已启用。"
         MSG_SIP_ENABLED_2="必须禁用 SIP 才能继续。"
         MSG_SIP_ENABLED_3="请按照以下步骤操作："
-        MSG_SIP_ENABLED_4_1="1. 重启 Mac，并长按开机键（针对 Apple 芯片 Mac）或按住 Command + R（针对 Intel 芯片 Mac）进入恢复模式。"
+        MSG_SIP_ENABLED_4_1="1. 重启 Mac，并长按开机键进入恢复模式。"
         MSG_SIP_ENABLED_4_2="2. 在恢复模式菜单栏中选择 '实用工具' -> '终端'。"
         MSG_SIP_ENABLED_4_3="3. 在终端中输入 'csrutil disable' 并按回车。"
         MSG_SIP_ENABLED_4_4="4. 输入 'reboot' 并按回车重启 Mac。"
@@ -180,10 +170,7 @@ case "$LANG" in
         MSG_MODIFY_PLIST_START_1="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
         MSG_MODIFY_PLIST_START_2="正在修改 $OS_ELIGIBILITY_PLIST 中的特定键值..."
         MSG_MODIFY_PLISTS_COMPLETE="所有必要的 plist 文件修改完成。"
-        MSG_DOWNLOAD_ZOUXIAN_START="正在下载并安装第三方脚本 zouxian.sh..."
-        MSG_DOWNLOAD_ZOUXIAN_ERROR="错误：第三方脚本下载失败。请检查网络连接或 GitHub 仓库是否可用。"
-        MSG_CHMOD_ZOUXIAN="赋予脚本执行权限..."
-        MSG_EXECUTE_ZOUXIAN="执行第三方脚本 zouxian..."
+        MSG_EXECUTE_ZOUXIAN="执行资格修补逻辑..." # Modified message
         MSG_CHECK_AI_TITLE="6. 请检查 Apple 智能状态"
         MSG_CHECK_AI_INSTR_1="重要：现在请去 '系统设置' -> 'Apple 智能' 或 'Siri' 检查'Apple智能'选项是否已经出现。"
         MSG_CHECK_AI_INSTR_2="如果 'Apple 智能' **已经出现**，或者你发现 Siri/Spotlight 已经具备 Apple 智能的某些功能（即使入口没出现），请在下面输入 Y。"
@@ -207,11 +194,9 @@ case "$LANG" in
         MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 "
         MSG_ENSURE_NO_UCHG="确保没有uchg标记..."
         MSG_FAILURE_CONSIDER_STEPS="Apple 智能启用尝试失败。请考虑以下步骤："
-        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
-        MSG_FAILURE_STEP_2="2. 向第三方脚本作者反馈问题: https://github.com/CatMe0w/zouxian/issues"
+        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta 4)。"
+        MSG_FAILURE_STEP_2="2. 向相关社区/仓库反馈问题。" # Modified to be generic
         MSG_FAILURE_STEP_3="3. 为了系统安全，强烈建议你重启后进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
-        MSG_CLEANUP_ZOUXIAN_START="清理临时脚本 /usr/local/bin/zouxian..."
-        MSG_CLEANUP_COMPLETE="清理完成。"
         MSG_SCRIPT_END="脚本执行结束。"
         MSG_DISCLAIMER="免责声明：此脚本修改系统文件，可能导致不稳定或意外行为。请自行承担风险。"
         ;;
@@ -239,7 +224,7 @@ if [ ! -f "$PLISTBUDDY" ]; then
     # Re-check if default path is available
     if ! command -v "$PLISTBUDDY" &> /dev/null; then
         echo "$MSG_PLISTBUDDY_ERROR"
-        exit 1
+        exit 1 # Exit if PlistBuddy is not found
     fi
 fi
 
@@ -258,7 +243,7 @@ if [[ $sip_status != *"System Integrity Protection status: disabled"* ]]; then
     echo "$MSG_SIP_ENABLED_4_4"
     echo "$MSG_SIP_ENABLED_5"
     echo "=============================================="
-    exit 1
+    exit 1 # Exit if SIP is enabled
 else
     echo "$MSG_SIP_DISABLED"
 fi
@@ -280,7 +265,7 @@ sudo chmod 777 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
 # Ensure both plist files are writable
 if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
     echo "$MSG_WRITE_PERMISSION_ERROR"
-    exit 1
+    exit 1 # Exit if write permission is not obtained
 fi
 
 # 3. Backup original plist files
@@ -325,25 +310,50 @@ sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answe
 echo "$MSG_MODIFY_PLISTS_COMPLETE"
 
 
-# 5. Download and execute third-party script zouxian (Moved later in sequence)
-echo "$MSG_DOWNLOAD_ZOUXIAN_START"
-# Use sudo to download file to a system directory
-sudo curl https://raw.githubusercontent.com/CatMe0w/zouxian/master/zouxian.sh -o /usr/local/bin/zouxian
+# 5. Execute eligibility patch logic (replaces zouxian execution)
+echo "$MSG_EXECUTE_ZOUXIAN" # Use the updated message
 
-# Ensure download was successful
-if [ ! -f "/usr/local/bin/zouxian" ]; then
-    echo "$MSG_DOWNLOAD_ZOUXIAN_ERROR"
-    # Clean up backup files if download fails before entering success/failure logic
-    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP"
-    exit 1 # Exit script
+# Original Author: CatMe0w
+# Source: https://github.com/CatMe0w/zouxian/blob/master/zouxian.sh
+# This embedded script logic waits for eligibilityd and patches it using lldb.
+MAX_WAIT_TIME=60
+CHECK_INTERVAL=1
+SECONDS_PASSED=0
+PATCH_SUCCESS=1 # Variable to track if the patch was successfully applied (0 = success, 1 = failure)
+
+while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
+  PID=$(pgrep eligibilityd)
+  if [ ! -z "$PID" ]; then
+    echo "eligibilityd found with PID $PID"
+	
+    sudo lldb --batch \
+    -o "process attach --name eligibilityd" \
+    -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
+    -o "expression (void) [[EligibilityEngine sharedInstance] recomputeAllDomainAnswers]" \
+    -o "process detach" \
+    -o quit
+
+    # Check the exit status of the lldb command
+    if [ $? -eq 0 ]; then
+        echo "lldb command succeeded."
+        PATCH_SUCCESS=0
+    else
+        echo "lldb command failed."
+        exit 1
+    fi
+  fi
+  sleep $CHECK_INTERVAL
+  SECONDS_PASSED=$((SECONDS_PASSED + CHECK_INTERVAL))
+done
+
+# Check if the loop finished because it timed out (eligibilityd not found)
+if [ "$PATCH_SUCCESS" -ne 0 ]; then
+  echo "eligibilityd not found after $MAX_WAIT_TIME seconds"
+  exit 1
 fi
 
-echo "$MSG_CHMOD_ZOUXIAN"
-sudo chmod +x /usr/local/bin/zouxian
+# End of embedded eligibility patch logic
 
-echo "$MSG_EXECUTE_ZOUXIAN"
-# Execute the downloaded script
-sudo /usr/local/bin/zouxian
 
 echo ""
 echo "=============================================="
@@ -440,15 +450,11 @@ else
 
 fi
 
-# 8. Clean up the downloaded zouxian script (executed in both success and failure paths)
-echo "$MSG_CLEANUP_ZOUXIAN_START"
-sudo rm -f /usr/local/bin/zouxian
-echo "$MSG_CLEANUP_COMPLETE"
 
 echo ""
 echo "=============================================="
 echo "$MSG_SCRIPT_END"
-echo "$MSG_DISCLAIMER" # Add disclaimer at the very end
+echo "$MSG_DISCLAIMER"
 echo "=============================================="
 
 exit 0
