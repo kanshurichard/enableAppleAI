@@ -117,11 +117,10 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 ## 常见问题
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
-答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该代码会尝试用其他代码替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载该代码，还不行的话可能只能重装系统了。
+答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
 
 **问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
 答：Siri并不使用机型代码，而是使用你的IP地址，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
-
 
 **问：是否能开启繁体中文的AI？**  
 答：不可以，因为Apple到目前（2025.5）为止都没有支持繁体中文AI，因而你无法下载到相关语言文件。为开启AI，请确保系统相关语言设置为简体中文（或其他受到支持的语言）。
