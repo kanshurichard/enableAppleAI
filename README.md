@@ -4,8 +4,6 @@
 
 **2.0版本已上线，支持相册的“消除（Clean Up）”功能开启！**
 
-如果使用2.0版本遇到问题，请回退到旧的1.0版本（enable_ai_old.sh）再试试。
-
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
 TODO：
@@ -115,6 +113,9 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 * 如果按照步骤执行后 Apple 智能未能成功启用，或者出现其他异常，您也可以在本项目的 GitHub Issues 中提交问题。
 
 ## 常见问题
+
+**如何卸载？**  
+答：只要在关闭SIP后，重新运行一遍脚本，到了问你是否看到AI功能出现的那一步，按“N”选否，脚本就会自动解锁所有已锁定文件。再次重启电脑后，系统就会自动用原始系统文件替代修改后的文件，相当于卸载所有对系统的更改。此时可以重新开启SIP。
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
 答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
