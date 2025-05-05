@@ -55,15 +55,24 @@ TODO：
 
 ### 步骤 2: 下载并运行脚本
 
+
 **单命令快速执行方法:**
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
+
+**最新2.11测试版脚本（推荐先尝试）：**
+```bash
+curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/develop/enable_ai.sh | bash
+```
+如果测试版遇到问题，请您去提Issue。同时可以尝试较稳定的2.0旧版：
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
 
 **如果在国内访问困难，请尝试以下国内加速地址：**
+
+旧版：
 ```bash
 curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.sh | bash
 ```
@@ -104,5 +113,17 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 
 * 如果脚本执行过程中遇到错误，请检查终端输出的错误信息。
 * 如果按照步骤执行后 Apple 智能未能成功启用，或者出现其他异常，您也可以在本项目的 GitHub Issues 中提交问题。
+
+## 常见问题
+
+**问：执行eligibilityd相关的注入代码时报错，怎么办？**  
+答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该代码会尝试用其他代码替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载该代码，还不行的话可能只能重装系统了。
+
+**问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
+答：Siri并不使用机型代码，而是使用你的IP地址，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
+
+
+**问：是否能开启繁体中文的AI？**  
+答：不可以，因为Apple到目前（2025.5）为止都没有支持繁体中文AI，因而你无法下载到相关语言文件。为开启AI，请确保系统相关语言设置为简体中文（或其他受到支持的语言）。
 
 ---
