@@ -22,11 +22,9 @@ TODO：
 
 该脚本的主要思想是通过以下步骤尝试绕过 Apple 对 Apple 智能的启用检查：
 
-1.  检查并要求禁用 macOS 的 SIP 功能，以便修改系统文件。**（破解完成后可重新开启，不影响AI功能）**
-2.  下载并执行一个外部的第三方脚本 (`zouxian.sh`)，该脚本会暂时破解eligibiltyd，使其向系统数据库输出该机型支持AI的信息（具体功能请参考该脚本的源仓库）。
-3.  修改 `/private/var/db/eligibilityd/eligibility.plist` 这个系统文件，特别是调整其中关于设备区域码 (OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE) 和外部启动盘 (OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE) 的检查值，禁止系统用这些参数来作为功能开启的前提条件。
-4.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的数据库文件状态。
-5.  清理下载的第三方脚本。
+1.  下载并执行一个[外部的第三方脚本](https://github.com/CatMe0w/zouxian)，该脚本会暂时注入eligibiltyd，使其向系统数据库输出该机型支持AI的信息（具体功能请参考该脚本的源仓库）。
+2.  修改 `/private/var/db/eligibilityd/eligibility.plist` 这个系统文件，特别是调整其中关于设备区域码 (OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE) 和外部启动盘 (OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE) 的检查值，禁止系统用这些参数来作为功能开启的前提条件。
+3.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的数据库文件状态。
 
 ## 前置条件
 
