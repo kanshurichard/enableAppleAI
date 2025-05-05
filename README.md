@@ -117,6 +117,9 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 **问：如何卸载？**  
 答：只要在关闭SIP后，重新运行一遍脚本，到了问你是否看到AI功能出现的那一步，按“N”选否，脚本就会自动解锁所有已锁定文件。再次重启电脑后，系统就会自动用原始系统文件替代修改后的文件，相当于卸载所有对系统的更改。此时可以重新开启SIP。
 
+**问：能否在登录国区账号为iCloud时开启AI？**。
+答：目前还不可以，但有人进行了相关尝试，并（可能）[找到了一种变通的方法](https://github.com/kanshurichard/enableAppleAI/issues/6)。
+
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
 答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
 
