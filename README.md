@@ -58,14 +58,14 @@ TODO：
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新2.11测试版脚本（推荐先尝试）：**
-```bash
-curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/develop/enable_ai.sh | bash
-```
-如果测试版遇到问题，请您去提Issue。同时可以尝试较稳定的2.0旧版：
-
+**最新2.11脚本（推荐先尝试）：**
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
+```
+如果本版遇到问题，请您去提Issue。同时可以尝试2.0旧版：
+
+```bash
+curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai_old.sh | bash
 ```
 
 **如果在国内访问困难，请尝试以下国内加速地址：**
