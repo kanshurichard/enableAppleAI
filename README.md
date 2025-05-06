@@ -70,7 +70,6 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 
 **如果在国内访问困难，请尝试以下国内加速地址：**
 
-旧版：
 ```bash
 curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.sh | bash
 ```
