@@ -125,7 +125,7 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 **问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
 答：Siri并不使用机型代码，而是使用你的IP地址，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
 
-**问：图乐园（Image Playground）无法创建图片的原因？**
+**问：图乐园（Image Playground）无法创建图片的原因？**  
 答：图乐园目前不支持中文语言下创建图片，请将系统语言改为英语（美国），即可正常使用。
 
 **问：是否能开启繁体中文的AI？**  
