@@ -131,4 +131,10 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 **问：是否能开启繁体中文的AI？**  
 答：不可以，因为Apple到目前（2025.5）为止都没有支持繁体中文AI，因而你无法下载到相关语言文件。为开启AI，请确保系统相关语言设置为简体中文（或其他受到支持的语言）。
 
+**问：显示AI但是外区ID+外区位置依然显示地区不支持AI怎么办？**
+
+答：重启设备，在关闭SIP的情况下再次运行一遍脚本，会看到AI模型开始下载。 
+
+
+
 ---
