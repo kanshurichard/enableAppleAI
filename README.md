@@ -1,6 +1,6 @@
 # enableAppleAI
 
-一种在MacOS上（目前测试直至MacOS 26 beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
+一种在MacOS上（目前测试MacOS 15.4.1+及26 beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
 
 **2.0版本已上线，支持相册的“消除（Clean Up）”功能开启！**
 
