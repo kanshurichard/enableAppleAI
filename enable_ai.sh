@@ -331,7 +331,7 @@ while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
     sudo lldb --batch \
     -o "process attach --name eligibilityd" \
     -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
-    -o "expression (void) [[EligibilityEngine sharedInstance] recomputeAllDomainAnswers]" \
+    -o "expression (void) [[EligibilityEngine sharedInstance] _onQueue_recomputeAllDomainAnswers]" \
     -o "process detach" \
     -o quit
 
