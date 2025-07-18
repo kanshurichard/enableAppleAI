@@ -331,7 +331,9 @@ while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
     sudo lldb --batch \
     -o "process attach --name eligibilityd" \
     -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
-    -o "expression -l objc -- @import Foundation; id $e = [EligibilityEngine sharedInstance]; NSArray<NSString*> *sels = @[@\"_onQueue_recomputeAllDomainAnswers\", @\"recomputeAllDomainAnswers\"]; for (NSString *selName in sels) { SEL sel = NSSelectorFromString(selName); if ([(NSObject *)$e respondsToSelector:sel]) { (void)[(NSObject *)$e performSelector:sel]; NSLog(@\"%@ performed\", selName); break; } }" \
+    -o "expression -l objc -- @import Foundation" \
+    -o "expression -l objc -- id engine = [EligibilityEngine sharedInstance]; if (engine != nil && [(NSObject*)engine respondsToSelector:@selector(recomputeAllDomainAnswers)]) { [(NSObject*)engine performSelector:@selector(recomputeAllDomainAnswers)]; NSLog(@\"recomputeAllDomainAnswers performed\"); }" \
+    -o "expression -l objc -- id engine = [EligibilityEngine sharedInstance]; if (engine != nil && [(NSObject*)engine respondsToSelector:@selector(_onQueue_recomputeAllDomainAnswers)]) { [(NSObject*)engine performSelector:@selector(_onQueue_recomputeAllDomainAnswers)]; NSLog(@\"_onQueue_recomputeAllDomainAnswers performed\"); }" \
     -o "process detach" \
     -o quit
 
