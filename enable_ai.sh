@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.2 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 2.2 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.11 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 2.11 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
