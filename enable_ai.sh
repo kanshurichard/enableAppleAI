@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.11 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 2.11 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.2 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 2.21 beta by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -331,7 +331,9 @@ while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
     sudo lldb --batch \
     -o "process attach --name eligibilityd" \
     -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
-    -o "expression (void) [[EligibilityEngine sharedInstance] recomputeAllDomainAnswers]" \
+    -o "expression -l objc -- @import Foundation" \
+    -o "expression -l objc -- id engine = [EligibilityEngine sharedInstance]; if (engine != nil && [(NSObject*)engine respondsToSelector:@selector(recomputeAllDomainAnswers)]) { [(NSObject*)engine performSelector:@selector(recomputeAllDomainAnswers)]; NSLog(@\"recomputeAllDomainAnswers performed\"); }" \
+    -o "expression -l objc -- id engine = [EligibilityEngine sharedInstance]; if (engine != nil && [(NSObject*)engine respondsToSelector:@selector(_onQueue_recomputeAllDomainAnswers)]) { [(NSObject*)engine performSelector:@selector(_onQueue_recomputeAllDomainAnswers)]; NSLog(@\"_onQueue_recomputeAllDomainAnswers performed\"); }" \
     -o "process detach" \
     -o quit
 
