@@ -58,18 +58,12 @@ TODO：
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新2.2脚本（推荐先尝试）：**
-
-本版本在 @parkerjj 的帮助下，尝试解决了MacOS 15.5版本系统中一个可能导致报错的问题：
+**最新2.11脚本：**
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
-如果本版遇到问题，请您去提Issue。同时可以尝试2.11旧版：
-
-```bash
-curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai_old.sh | bash
-```
+如果本版遇到问题，请您去提Issue。
 
 **如果在国内访问困难，请尝试以下国内加速地址：**
 
