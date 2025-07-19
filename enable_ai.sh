@@ -113,7 +113,7 @@ case "$LANG" in
         MSG_BACKUP_START="Backing up original file " # Will append filename
         MSG_BACKUP_ERROR="Error: Failed to successfully back up " # Will append filename
         MSG_BACKUP_COMPLETE="Backup complete."
-        MSG_RESTART_ELIGIBILITY="Restarting eligibility de..."
+        MSG_RESTART_ELIGIBILITY="Restarting eligibility daemon to provide any errors..."
         MSG_MODIFY_PLIST_START_1="Modifying keys in $ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLIST_START_2="Modifying key in $OS_ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLISTS_COMPLETE="All necessary plist modifications complete."
@@ -324,9 +324,14 @@ SECONDS_PASSED=0
 PROCESS_FOUND=0 # Flag to indicate if eligibilityd was found (0=not found, 1=found)
 
 # Restart Eligility Engine
-echo 
+echo "$MSG_RESTART_ELIGIBILITY"
+# Stop eligibilityd to ensure it can be patched
+# Use sudo to ensure we have the necessary permissions
 sudo launchctl stop com.apple.eligibilityd
-sleep 3
+sleep 0.5 # Wait for a few seconds to ensure eligibilityd has stopped
+# Start eligibilityd again to ensure it is running before we attempt to attach
+sudo launchctl start com.apple.eligibilityd
+# Wait for eligibilityd to start and then patch it
 
 while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
   PID=$(pgrep eligibilityd)
