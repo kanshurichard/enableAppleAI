@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.11 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 2.11 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 2.12 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 2.12 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -113,6 +113,7 @@ case "$LANG" in
         MSG_BACKUP_START="Backing up original file " # Will append filename
         MSG_BACKUP_ERROR="Error: Failed to successfully back up " # Will append filename
         MSG_BACKUP_COMPLETE="Backup complete."
+        MSG_RESTART_ELIGIBILITY="Restarting eligibility daemon to provide any errors..."
         MSG_MODIFY_PLIST_START_1="Modifying keys in $ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLIST_START_2="Modifying key in $OS_ELIGIBILITY_PLIST ..."
         MSG_MODIFY_PLISTS_COMPLETE="All necessary plist modifications complete."
@@ -167,6 +168,7 @@ case "$LANG" in
         MSG_BACKUP_START="正在备份原始文件 "
         MSG_BACKUP_ERROR="错误：未能成功备份 "
         MSG_BACKUP_COMPLETE="备份完成。"
+        MSG_RESTART_ELIGIBILITY="正在重启eligibility守护进程，以避免出错..."
         MSG_MODIFY_PLIST_START_1="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
         MSG_MODIFY_PLIST_START_2="正在修改 $OS_ELIGIBILITY_PLIST 中的特定键值..."
         MSG_MODIFY_PLISTS_COMPLETE="所有必要的 plist 文件修改完成。"
@@ -320,6 +322,16 @@ MAX_WAIT_TIME=60
 CHECK_INTERVAL=1
 SECONDS_PASSED=0
 PROCESS_FOUND=0 # Flag to indicate if eligibilityd was found (0=not found, 1=found)
+
+# Restart Eligility Engine
+echo "$MSG_RESTART_ELIGIBILITY"
+# Stop eligibilityd to ensure it can be patched
+# Use sudo to ensure we have the necessary permissions
+sudo launchctl stop com.apple.eligibilityd
+sleep 0.5 # Wait for a few seconds to ensure eligibilityd has stopped
+# Start eligibilityd again to ensure it is running before we attempt to attach
+sudo launchctl start com.apple.eligibilityd
+# Wait for eligibilityd to start and then patch it
 
 while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
   PID=$(pgrep eligibilityd)
