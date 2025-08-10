@@ -58,9 +58,9 @@ TODO：
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新2.12脚本：**
+**最新2.13脚本：**
 
-在@parkerjj 帮助下，解决了一个可能导致注入失败的问题。
+在 @parkerjj 和 @MsRCAtN 帮助下，解决了两个可能导致注入失败的问题。
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
