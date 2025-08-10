@@ -340,7 +340,7 @@ while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
     PROCESS_FOUND=1 # Mark that the process was found
     # Use sudo for lldb as it needs elevated privileges to attach to system processes
     # set -e will cause the script to exit if the sudo lldb command itself fails critically.
-    sudo lldb --batch \
+    sudo -E "$(xcrun --find lldb)" --batch \
     -o "process attach --name eligibilityd" \
     -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
     -o "expression (void) [[EligibilityEngine sharedInstance] recomputeAllDomainAnswers]" \
