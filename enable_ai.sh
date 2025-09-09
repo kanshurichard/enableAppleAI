@@ -308,6 +308,7 @@ echo "$MSG_MODIFY_PLIST_START_2"
 # Use PlistBuddy to set the value in the second plist
 # Add || true
 sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
 
 echo "$MSG_MODIFY_PLISTS_COMPLETE"
 
