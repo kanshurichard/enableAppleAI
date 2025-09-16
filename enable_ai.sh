@@ -334,7 +334,7 @@ sudo launchctl start com.apple.eligibilityd
 # Wait for eligibilityd to start and then patch it
 
 while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
-  PID=$(pgrep eligibilityd)
+  PID=$(pgrep eligibilityd || true)
   if [ ! -z "$PID" ]; then
     echo "eligibilityd found with PID $PID"
     PROCESS_FOUND=1 # Mark that the process was found
