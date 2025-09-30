@@ -6,7 +6,7 @@
 
 ## 最新3.0版本介绍
 
-- 换用了一种更优雅的方式（来自https://github.com/hyderay/AiOnMac的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**目测可以解决99%的Issue**。
+- 换用了一种更优雅的方式（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**目测可以解决99%的Issue**。
 - 加入了对countryd的缓存文件修改，使得在MacOS26系统中，可以在设备位于中国等不支持的国家时正常开启Siri中的ChatGPT，Apple News及国际版苹果地图等功能（需要配合受支持地区的网络IP）
 
 
