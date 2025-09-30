@@ -12,8 +12,8 @@
 
 ## 工作原理概述
 
-1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制MacOS系统认为设备符合开启Apple智能的要求，且当前设备位于美国。
-2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态。
+1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制让MacOS系统认为：（1）设备符合开启Apple智能的要求；（2）设备当前位于美国。
+2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
 
 ---以下为2.X旧版本的工作原理介绍----
 
