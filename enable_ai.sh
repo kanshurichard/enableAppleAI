@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 2.13 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 2.13 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 3.0 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 3.0 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -31,12 +31,24 @@ while true; do
     esac
 done
 
-# --- End Language Selection ---
+# --- End Language Settings ---
 
 
 # --- Language Settings ---
-# Declare variables for messages (these will be assigned based on the selected LANG)
-MSG_TITLE=""
+# Declare variables for messages
+MSG_AGREEMENT_TITLE=""
+MSG_AGREEMENT_LINE1=""
+MSG_AGREEMENT_LINE2=""
+MSG_AGREEMENT_LINE3=""
+MSG_AGREEMENT_PROMPT=""
+MSG_AGREEMENT_CANCEL=""
+MSG_MODE_SELECT_TITLE=""
+MSG_MODE_SELECT_1=""
+MSG_MODE_SELECT_2=""
+MSG_MODE_SELECT_3=""
+MSG_MODE_PROMPT=""
+MSG_INVALID_MODE=""
+MSG_EXITING=""
 MSG_PLISTBUDDY_WARN=""
 MSG_PLISTBUDDY_ERROR=""
 MSG_SIP_CHECK=""
@@ -56,418 +68,392 @@ MSG_WRITE_PERMISSION_ERROR=""
 MSG_BACKUP_START=""
 MSG_BACKUP_ERROR=""
 MSG_BACKUP_COMPLETE=""
-MSG_MODIFY_PLIST_START_1="" # Message for modifying the first plist
-MSG_MODIFY_PLIST_START_2="" # Message for modifying the second plist
-MSG_MODIFY_PLISTS_COMPLETE="" # Message for modifying both plists complete
-MSG_EXECUTE_ZOUXIAN="" # Retained message for logical step
-MSG_CHECK_AI_TITLE=""
-MSG_CHECK_AI_INSTR_1=""
-MSG_CHECK_AI_INSTR_2=""
-MSG_CHECK_AI_INSTR_3=""
-MSG_CHECK_AI_PROMPT=""
-MSG_SUCCESS_CONFIRMED_START=""
+MSG_MODIFY_PLISTS_START=""
+MSG_MODIFY_PLISTS_COMPLETE=""
+MSG_FINALIZE_START=""
 MSG_SET_PERMS_444=""
 MSG_SET_UCHG=""
 MSG_FILE_LOCK_COMPLETE=""
-MSG_CLEANUP_BACKUPS="" # Message for cleaning up both backups
+MSG_CLEANUP_BACKUPS=""
 MSG_OPERATION_COMPLETE=""
+MSG_FORCE_US_PROMPT_TITLE=""
+MSG_FORCE_US_PROMPT_BENEFITS=""
+MSG_FORCE_US_PROMPT_WARNING=""
+MSG_FORCE_US_PROMPT_CONFIRM=""
+MSG_FORCE_US_START=""
+MSG_FORCE_US_UNLOCKING=""
+MSG_FORCE_US_BACKUP=""
+MSG_FORCE_US_CONVERT_XML=""
+MSG_FORCE_US_REPLACE=""
+MSG_FORCE_US_CONVERT_BIN=""
+MSG_FORCE_US_LOCKING=""
+MSG_FORCE_US_LOCK_COMPLETE=""
+MSG_FORCE_US_SUCCESS=""
+MSG_FORCE_US_NOT_FOUND=""
 MSG_RESTART_NOW=""
-MSG_CHECK_AI_AGAIN=""
 MSG_RECOMMEND_RE_ENABLE_SIP=""
-MSG_FAILURE_CONFIRMED_START=""
-MSG_RESTORE_START_1="" # Message for restoring the first plist
-MSG_RESTORE_START_2="" # Message for restoring the second plist
-MSG_RESTORE_WARNING_FAILED=""
-MSG_RESTORE_WARNING_MANUAL=""
-MSG_RESTORE_COMPLETE=""
-MSG_RESTORE_WARNING_NOT_FOUND=""
-MSG_ENSURE_NO_UCHG=""
-MSG_FAILURE_CONSIDER_STEPS=""
-MSG_FAILURE_STEP_1=""
-MSG_FAILURE_STEP_2=""
-MSG_FAILURE_STEP_3=""
+MSG_UNLOCK_START=""
+MSG_UNLOCK_NOUCHG=""
+MSG_UNLOCK_CHMOD=""
+MSG_UNLOCK_COMPLETE=""
 MSG_SCRIPT_END=""
-MSG_DISCLAIMER=""
-
+MSG_SUPPORT_URL=""
 
 # Assign messages based on the selected language
 case "$LANG" in
     en*)
-        MSG_TITLE="macOS Apple Intelligence Enablement Script 2.0 by KanShuRichard"
-        MSG_PLISTBUDDY_WARN="Warning: PlistBuddy tool ($PLISTBUDDY) not found. Attempting default path."
-        MSG_PLISTBUDDY_ERROR="Error: PlistBuddy tool not found. Ensure macOS Developer Tools or Xcode is installed."
+        MSG_AGREEMENT_TITLE="--- IMPORTANT: PLEASE READ BEFORE PROCEEDING ---"
+        MSG_AGREEMENT_LINE1="[RISK] This script modifies core system files. Incorrect use could potentially lead to system instability."
+        MSG_AGREEMENT_LINE2="[REQUIREMENT] You MUST disable System Integrity Protection (SIP) from Recovery Mode before running the patch."
+        MSG_AGREEMENT_LINE3="[DISCLAIMER] All operations are performed at your own risk."
+        MSG_AGREEMENT_PROMPT="Do you understand the risks and wish to continue? (y/n): "
+        MSG_AGREEMENT_CANCEL="Operation cancelled by user. Exiting."
+        MSG_MODE_SELECT_TITLE="Please select an operation:"
+        MSG_MODE_SELECT_1="1. Enable Apple Intelligence (Patch files)"
+        MSG_MODE_SELECT_2="2. Unlock Files (Revert / Uninstall patch)"
+        MSG_MODE_SELECT_3="3. Exit"
+        MSG_MODE_PROMPT="Enter your choice [1-3]: "
+        MSG_INVALID_MODE="Invalid choice. Exiting."
+        MSG_EXITING="Exiting script."
+        MSG_PLISTBUDDY_WARN="Warning: PlistBuddy tool not found. Attempting default path."
+        MSG_PLISTBUDDY_ERROR="Error: PlistBuddy tool not found. Ensure Xcode Command Line Tools are installed."
         MSG_SIP_CHECK="Checking System Integrity Protection (SIP) status..."
         MSG_SIP_ENABLED_1="SIP (System Integrity Protection) is currently enabled."
         MSG_SIP_ENABLED_2="SIP must be disabled to continue."
         MSG_SIP_ENABLED_3="Please follow these steps:"
-        MSG_SIP_ENABLED_4_1="1. Restart your Mac and press and hold the power button to enter Recovery Mode."
+        MSG_SIP_ENABLED_4_1="1. Restart your Mac and hold the power button to enter Recovery Mode."
         MSG_SIP_ENABLED_4_2="2. In Recovery Mode, select 'Utilities' -> 'Terminal' from the menu bar."
         MSG_SIP_ENABLED_4_3="3. In the Terminal, type 'csrutil disable' and press Enter."
         MSG_SIP_ENABLED_4_4="4. Type 'reboot' and press Enter to restart your Mac."
         MSG_SIP_ENABLED_5="After disabling SIP, please run this script again."
         MSG_SIP_DISABLED="SIP (System Integrity Protection) is disabled, proceeding."
-        MSG_START_STEPS="Starting Apple Intelligence enablement attempt steps..."
+        MSG_START_STEPS="Starting Apple Intelligence enablement steps..."
         MSG_PREPARE_MODIFY="Preparing to modify system files..."
-        MSG_UNLOCK_PERMS="Removing immutable (uchg) flag and setting permissions to 777 for files in system eligibility directories..."
-        MSG_WRITE_PERMISSION_ERROR="Error: Failed to get write permission for a necessary plist file. Please confirm SIP is disabled."
-        MSG_BACKUP_START="Backing up original file " # Will append filename
-        MSG_BACKUP_ERROR="Error: Failed to successfully back up " # Will append filename
+        MSG_UNLOCK_PERMS="Unlocking all related system directories for compatibility..."
+        MSG_WRITE_PERMISSION_ERROR="Error: Failed to get write permission. Please ensure SIP is disabled and run the script with sudo."
+        MSG_BACKUP_START="Backing up original file "
+        MSG_BACKUP_ERROR="Error: Failed to back up "
         MSG_BACKUP_COMPLETE="Backup complete."
-        MSG_RESTART_ELIGIBILITY="Restarting eligibility daemon to provide any errors..."
-        MSG_MODIFY_PLIST_START_1="Modifying keys in $ELIGIBILITY_PLIST ..."
-        MSG_MODIFY_PLIST_START_2="Modifying key in $OS_ELIGIBILITY_PLIST ..."
-        MSG_MODIFY_PLISTS_COMPLETE="All necessary plist modifications complete."
-        MSG_EXECUTE_ZOUXIAN="Executing eligibility patch logic..." # Modified message
-        MSG_CHECK_AI_TITLE="6. Check Apple Intelligence Status"
-        MSG_CHECK_AI_INSTR_1="Important: Please go to 'System Settings' -> 'Apple Intelligence' or 'Siri' now and check if the 'Apple Intelligence' option appears."
-        MSG_CHECK_AI_INSTR_2="If 'Apple Intelligence' **does appear**, or you see signs of AI features (even if the main option is hidden), please enter Y below."
-        MSG_CHECK_AI_INSTR_3="If 'Apple Intelligence' **does not appear**, or no AI features are evident, please enter N to exit and report."
-        MSG_CHECK_AI_PROMPT="Confirm if Apple Intelligence appeared or partial functionality is enabled (Y/N): "
-        MSG_SUCCESS_CONFIRMED_START="User confirmed success, completing setup and locking files..."
-        MSG_SET_PERMS_444="Setting permissions for eligibility files to 444 (read-only)..."
-        MSG_SET_UCHG="Setting immutable (uchg) flag for eligibility files..."
+        MSG_MODIFY_PLISTS_START="Patching eligibility plists..."
+        MSG_MODIFY_PLISTS_COMPLETE="Plist modifications complete."
+        MSG_FINALIZE_START="Finalizing and locking files..."
+        MSG_SET_PERMS_444="Setting permissions to read-only (444)..."
+        MSG_SET_UCHG="Setting immutable (uchg) flag to prevent changes..."
         MSG_FILE_LOCK_COMPLETE="File locking complete."
         MSG_CLEANUP_BACKUPS="Cleaning up backup files..."
-        MSG_OPERATION_COMPLETE="Operation completed."
-        MSG_RESTART_NOW="Please restart your computer immediately."
-        MSG_CHECK_AI_AGAIN="After restarting, check Apple Intelligence status again."
-        MSG_RECOMMEND_RE_ENABLE_SIP="If Apple Intelligence remains enabled and you wish to restore system security, it is strongly recommended to enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
-        MSG_FAILURE_CONFIRMED_START="User confirmed failure, restoring files to previous state..."
-        MSG_RESTORE_START_1="Restoring original file $ELIGIBILITY_PLIST from backup file $PLIST_BACKUP ..."
-        MSG_RESTORE_START_2="Restoring original file $OS_ELIGIBILITY_PLIST from backup file $OS_PLIST_BACKUP ..."
-        MSG_RESTORE_WARNING_FAILED="Warning: Failed to restore " # Will append filename
-        MSG_RESTORE_WARNING_MANUAL="Manual intervention may be required!"
-        MSG_RESTORE_COMPLETE=" restore complete." # Prepended by filename
-        MSG_RESTORE_WARNING_NOT_FOUND="Warning: Backup file " # Will append filename
-        MSG_ENSURE_NO_UCHG="Ensuring uchg flag is removed..."
-        MSG_FAILURE_CONSIDER_STEPS="Apple Intelligence enablement attempt failed. Please consider the following steps:"
-        MSG_FAILURE_STEP_1="1. Check your macOS version compatibility (currently tested with 15.4.1 and 15.5 beta)."
-        MSG_FAILURE_STEP_2="2. Report the issue to the relevant community/repository." # Modified to be generic
-        MSG_FAILURE_STEP_3="3. For system security, it is strongly recommended to restart and enter Recovery Mode again and run 'csrutil enable' to re-enable SIP."
+        MSG_OPERATION_COMPLETE="Apple Intelligence patch applied successfully."
+        MSG_FORCE_US_PROMPT_TITLE="--- Optional Step: Force Device Location to US ---"
+        MSG_FORCE_US_PROMPT_BENEFITS="[Benefits] For macOS 26 (Sequoia), this can unlock features like ChatGPT in Siri, Apple News, and international version of Apple Maps in China (requires a suitable network IP)."
+        MSG_FORCE_US_PROMPT_WARNING="[Warning] This will disable the Gaode version of Apple Maps used in mainland China."
+        MSG_FORCE_US_PROMPT_CONFIRM="Would you like to force your device's physical country code to US? (y/n): "
+        MSG_FORCE_US_START="-> Starting to modify countryd database..."
+        MSG_FORCE_US_UNLOCKING="   - Unlocking countryd file for writing..."
+        MSG_FORCE_US_BACKUP="   - Backed up original countryd plist."
+        MSG_FORCE_US_CONVERT_XML="   - Converted plist to XML for editing."
+        MSG_FORCE_US_REPLACE="   - Replaced country code with 'US'."
+        MSG_FORCE_US_CONVERT_BIN="   - Converted plist back to binary format."
+        MSG_FORCE_US_LOCKING="   - Locking countryd plist to prevent overwrites..."
+        MSG_FORCE_US_LOCK_COMPLETE="   - Lock complete."
+        MSG_FORCE_US_SUCCESS="✅ Location successfully forced to US and locked."
+        MSG_FORCE_US_NOT_FOUND="⚠️ Warning: countryd plist not found. Skipping this step."
+        MSG_RESTART_NOW="A REBOOT IS REQUIRED for all changes to take effect. Please restart your Mac now."
+        MSG_RECOMMEND_RE_ENABLE_SIP="After restarting, it is strongly recommended to re-enable SIP for system security."
+        MSG_UNLOCK_START="Starting file unlock process (revert/uninstall)..."
+        MSG_UNLOCK_NOUCHG="Removing immutable (uchg) flag from all related directories..."
+        MSG_UNLOCK_CHMOD="Setting file permissions to default (644)..."
+        MSG_UNLOCK_COMPLETE="All related files (eligibility and countryd) have been unlocked."
         MSG_SCRIPT_END="Script execution finished."
-        MSG_DISCLAIMER="Disclaimer: This script modifies system files and may cause instability or unexpected behavior. Use at your own risk."
+        MSG_SUPPORT_URL="If you encounter any issues, please submit an Issue at https://github.com/kanshurichard/enableAppleAI"
         ;;
     *) # Default to Chinese
-        MSG_TITLE="macOS Apple Intelligence 启用辅助脚本 2.0 by KanShuRichard"
-        MSG_PLISTBUDDY_WARN="警告：找不到 PlistBuddy 工具 ($PLISTBUDDY)。尝试使用默认路径。"
-        MSG_PLISTBUDDY_ERROR="错误：找不到 PlistBuddy 工具。请确保已安装 macOS 开发者工具或 Xcode。"
-        MSG_SIP_CHECK="正在检测 System Integrity Protection (SIP) 状态..."
-        MSG_SIP_ENABLED_1="SIP (System Integrity Protection) 当前已启用。"
+        MSG_AGREEMENT_TITLE="--- 重要：在继续前请仔细阅读 ---"
+        MSG_AGREEMENT_LINE1="[风险] 本脚本会修改核心系统文件。不当使用可能导致系统不稳定。"
+        MSG_AGREEMENT_LINE2="[要求] 在执行修补前，您必须先从恢复模式禁用系统完整性保护 (SIP)。"
+        MSG_AGREEMENT_LINE3="[免责] 所有操作的风险由您自行承担。"
+        MSG_AGREEMENT_PROMPT="您是否理解并愿意承担以上风险，继续执行？(y/n): "
+        MSG_AGREEMENT_CANCEL="用户取消操作，脚本退出。"
+        MSG_MODE_SELECT_TITLE="请选择要执行的操作："
+        MSG_MODE_SELECT_1="1. 启用 Apple Intelligence (修补文件)"
+        MSG_MODE_SELECT_2="2. 解锁文件 (用于卸载或恢复)"
+        MSG_MODE_SELECT_3="3. 退出"
+        MSG_MODE_PROMPT="请输入你的选择 [1-3]: "
+        MSG_INVALID_MODE="无效选择，脚本退出。"
+        MSG_EXITING="脚本退出。"
+        MSG_PLISTBUDDY_WARN="警告：找不到 PlistBuddy 工具。将尝试使用系统默认路径。"
+        MSG_PLISTBUDDY_ERROR="错误：找不到 PlistBuddy 工具。请确保已安装 Xcode 命令行工具。"
+        MSG_SIP_CHECK="正在检测系统完整性保护 (SIP) 状态..."
+        MSG_SIP_ENABLED_1="SIP (系统完整性保护) 当前已启用。"
         MSG_SIP_ENABLED_2="必须禁用 SIP 才能继续。"
         MSG_SIP_ENABLED_3="请按照以下步骤操作："
         MSG_SIP_ENABLED_4_1="1. 重启 Mac，并长按开机键进入恢复模式。"
-        MSG_SIP_ENABLED_4_2="2. 在恢复模式菜单栏中选择 '实用工具' -> '终端'。"
+        MSG_SIP_ENABLED_4_2="2. 在恢复模式菜单栏中选择“实用工具” -> “终端”。"
         MSG_SIP_ENABLED_4_3="3. 在终端中输入 'csrutil disable' 并按回车。"
         MSG_SIP_ENABLED_4_4="4. 输入 'reboot' 并按回车重启 Mac。"
-        MSG_SIP_ENABLED_5="SIP 禁用后，请再次运行此脚本。"
-        MSG_SIP_DISABLED="SIP (System Integrity Protection) 已禁用，可以继续。"
-        MSG_START_STEPS="开始执行 Apple Intelligence 启用尝试步骤..."
+        MSG_SIP_ENABLED_5="禁用 SIP 后，请再次运行此脚本。"
+        MSG_SIP_DISABLED="SIP (系统完整性保护) 已禁用，可以继续。"
+        MSG_START_STEPS="开始执行 Apple Intelligence 启用步骤..."
         MSG_PREPARE_MODIFY="正在准备修改系统文件..."
-        MSG_UNLOCK_PERMS="正在删除 /private/var/db/eligibilityd/ 和 /private/var/db/os_eligibility/ 目录下文件的 immutable (uchg) 标记并设置权限为 777..."
-        MSG_WRITE_PERMISSION_ERROR="错误：未能获得必要的 plist 文件的写入权限。请再次确认已禁用 SIP。"
+        MSG_UNLOCK_PERMS="为确保兼容性，正在解锁所有相关的系统目录..."
+        MSG_WRITE_PERMISSION_ERROR="错误：未能获得写入权限。请确保 SIP 已禁用并使用 sudo 运行此脚本。"
         MSG_BACKUP_START="正在备份原始文件 "
         MSG_BACKUP_ERROR="错误：未能成功备份 "
         MSG_BACKUP_COMPLETE="备份完成。"
-        MSG_RESTART_ELIGIBILITY="正在重启eligibility守护进程，以避免出错..."
-        MSG_MODIFY_PLIST_START_1="正在修改 $ELIGIBILITY_PLIST 中的特定键值..."
-        MSG_MODIFY_PLIST_START_2="正在修改 $OS_ELIGIBILITY_PLIST 中的特定键值..."
-        MSG_MODIFY_PLISTS_COMPLETE="所有必要的 plist 文件修改完成。"
-        MSG_EXECUTE_ZOUXIAN="执行资格修补逻辑..." # Modified message
-        MSG_CHECK_AI_TITLE="6. 请检查 Apple 智能状态"
-        MSG_CHECK_AI_INSTR_1="重要：现在请去 '系统设置' -> 'Apple 智能' 或 'Siri' 检查'Apple智能'选项是否已经出现。"
-        MSG_CHECK_AI_INSTR_2="如果 'Apple 智能' **已经出现**，或者你发现 Siri/Spotlight 已经具备 Apple 智能的某些功能（即使入口没出现），请在下面输入 Y。"
-        MSG_CHECK_AI_INSTR_3="如果 'Apple 智能' **没有出现**，或者没有任何迹象表明功能已启用，请在下面输入 N。"
-        MSG_CHECK_AI_PROMPT="请确认 Apple 智能是否已出现或部分功能已启用 (Y/N): "
-        MSG_SUCCESS_CONFIRMED_START="用户确认成功，正在完成设置并锁定文件..."
-        MSG_SET_PERMS_444="设置 eligibility 文件权限为 444 (只读)..."
-        MSG_SET_UCHG="设置 eligibility 文件的 immutable (uchg) 标记..."
+        MSG_MODIFY_PLISTS_START="正在修补资格属性列表文件..."
+        MSG_MODIFY_PLISTS_COMPLETE="属性列表文件修改完成。"
+        MSG_FINALIZE_START="正在完成收尾工作并锁定文件..."
+        MSG_SET_PERMS_444="正在设置文件权限为只读 (444)..."
+        MSG_SET_UCHG="正在设置文件的系统保护标记 (uchg)..."
         MSG_FILE_LOCK_COMPLETE="文件锁定完成。"
-        MSG_CLEANUP_BACKUPS="清理备份文件..."
-        MSG_OPERATION_COMPLETE="操作已完成。"
-        MSG_RESTART_NOW="请立即重启你的电脑。"
-        MSG_CHECK_AI_AGAIN="重启后，再次检查 Apple 智能状态。"
-        MSG_RECOMMEND_RE_ENABLE_SIP="如果 Apple 智能仍为开启，并且你希望恢复系统的安全性，强烈建议你再次进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
-        MSG_FAILURE_CONFIRMED_START="用户确认失败，正在恢复文件到修改前状态..."
-        MSG_RESTORE_START_1="正在从备份文件 $PLIST_BACKUP 恢复原始文件 $ELIGIBILITY_PLIST ..."
-        MSG_RESTORE_START_2="正在从备份文件 $OS_PLIST_BACKUP 恢复原始文件 $OS_ELIGIBILITY_PLIST ..."
-        MSG_RESTORE_WARNING_FAILED="警告：未能从备份文件恢复 "
-        MSG_RESTORE_WARNING_MANUAL="可能需要手动恢复！"
-        MSG_RESTORE_COMPLETE=" 恢复完成。"
-        MSG_RESTORE_WARNING_NOT_FOUND="警告：备份文件 "
-        MSG_ENSURE_NO_UCHG="确保没有uchg标记..."
-        MSG_FAILURE_CONSIDER_STEPS="Apple 智能启用尝试失败。请考虑以下步骤："
-        MSG_FAILURE_STEP_1="1. 检查你的 macOS 版本是否兼容 (目前已测试15.4.1和15.5 beta)。"
-        MSG_FAILURE_STEP_2="2. 向相关社区/仓库反馈问题。" # Modified to be generic
-        MSG_FAILURE_STEP_3="3. 为了系统安全，强烈建议你重启后进入恢复模式，执行 'csrutil enable' 重新打开 SIP。"
+        MSG_CLEANUP_BACKUPS="正在清理备份文件..."
+        MSG_OPERATION_COMPLETE="Apple Intelligence 修补程序已成功应用。"
+        MSG_FORCE_US_PROMPT_TITLE="--- 可选步骤：强制修改当前设备所处地区为美国 ---"
+        MSG_FORCE_US_PROMPT_BENEFITS="[好处] 在 macOS 26 (Sequoia) 系统中，此操作可在中国大陆解锁 Siri中的ChatGPT、Apple News 及国际版苹果地图等功能（需配合相应的网络IP）。"
+        MSG_FORCE_US_PROMPT_WARNING="[副作用] 此操作将导致无法在中国大陆境内使用高德版苹果地图。"
+        MSG_FORCE_US_PROMPT_CONFIRM="您是否希望将系统的国家代码强制修改为美国 (US)？(y/n): "
+        MSG_FORCE_US_START="-> 开始修改 countryd 数据库..."
+        MSG_FORCE_US_UNLOCKING="   - 正在解锁 countryd 文件以便写入..."
+        MSG_FORCE_US_BACKUP="   - 已备份原始 countryd 文件。"
+        MSG_FORCE_US_CONVERT_XML="   - 已转换文件为 XML 格式以便编辑。"
+        MSG_FORCE_US_REPLACE="   - 已替换国家代码为 'US'。"
+        MSG_FORCE_US_CONVERT_BIN="   - 已转换文件回二进制格式。"
+        MSG_FORCE_US_LOCKING="   - 正在锁定 countryd 文件以防覆盖..."
+        MSG_FORCE_US_LOCK_COMPLETE="   - 锁定完成。"
+        MSG_FORCE_US_SUCCESS="✅ 系统地区已成功强制修改为美国并已锁定。"
+        MSG_FORCE_US_NOT_FOUND="⚠️ 警告：未找到 countryd 数据库文件，跳过此步骤。"
+        MSG_RESTART_NOW="必须重启才能使所有更改生效。请立即重启您的 Mac。"
+        MSG_RECOMMEND_RE_ENABLE_SIP="重启后，强烈建议您重新启用 SIP 以保障系统安全。"
+        MSG_UNLOCK_START="开始文件解锁流程 (恢复/卸载)..."
+        MSG_UNLOCK_NOUCHG="正在移除所有相关目录文件的系统保护标记 (uchg)..."
+        MSG_UNLOCK_CHMOD="正在恢复文件权限为系统默认 (644)..."
+        MSG_UNLOCK_COMPLETE="所有相关文件 (eligibility 和 countryd) 均已解锁。"
         MSG_SCRIPT_END="脚本执行结束。"
-        MSG_DISCLAIMER="免责声明：此脚本修改系统文件，可能导致不稳定或意外行为。请自行承担风险。"
+        MSG_SUPPORT_URL="如果遇到任何问题，请到 https://github.com/kanshurichard/enableAppleAI 提交Issue。"
         ;;
 esac
-
 # --- End Language Settings ---
 
 
-# Define key file and directory paths
-ELIGIBILITY_PLIST="/private/var/db/eligibilityd/eligibility.plist"
+# --- SCRIPT CONSTANTS AND FUNCTIONS ---
+
+# ── Ensure we’re root
+if (( EUID != 0 )); then
+  echo "Please run this script with sudo, e.g., sudo $0"
+  exit 1
+fi
+
+# ── File Paths & Dirs
 ELIGIBILITY_DIR="/private/var/db/eligibilityd"
-PLIST_BACKUP="/tmp/eligibility.plist.bak" # Backup file path
+OS_ELIGIBILITY_DIR="/private/var/db/os_eligibility"
+COUNTRYD_PLIST="/private/var/db/com.apple.countryd/countryCodeCache.plist"
 
-OS_ELIGIBILITY_PLIST="/private/var/db/os_eligibility/eligibility.plist" # Second plist path
-OS_ELIGIBILITY_DIR="/private/var/db/os_eligibility" # Second plist directory
-OS_PLIST_BACKUP="/tmp/os_eligibility.plist.bak" # Second backup file path
+PLISTBUDDY="/usr/libexec/PlistBuddy"
 
-
-PLISTBUDDY="/usr/libexec/PlistBuddy" # PlistBuddy tool path
-
-# Check if PlistBuddy exists
-if [ ! -f "$PLISTBUDDY" ]; then
-    echo "$MSG_PLISTBUDDY_WARN"
-    PLISTBUDDY="PlistBuddy"
-    # Re-check if default path is available
-    if ! command -v "$PLISTBUDDY" &> /dev/null; then
-        echo "$MSG_PLISTBUDDY_ERROR"
-        exit 1 # Exit if PlistBuddy is not found
+# --- Function to Force Location to US ---
+force_us_location() {
+    echo "$MSG_FORCE_US_START"
+    
+    if [ ! -f "$COUNTRYD_PLIST" ]; then
+        echo "$MSG_FORCE_US_NOT_FOUND"
+        return
     fi
-fi
+    
+    # Unlock the file before attempting to modify
+    echo "$MSG_FORCE_US_UNLOCKING"
+    sudo chflags nouchg "$COUNTRYD_PLIST" 2>/dev/null || true
+    sudo chmod 777 "$COUNTRYD_PLIST" 2>/dev/null || true
+
+    local BACKUP_FILE="${COUNTRYD_PLIST}.bak"
+    sudo cp "$COUNTRYD_PLIST" "$BACKUP_FILE"
+    echo "$MSG_FORCE_US_BACKUP"
+
+    sudo plutil -convert xml1 "$COUNTRYD_PLIST"
+    echo "$MSG_FORCE_US_CONVERT_XML"
+
+    local NEW_COUNTRY_CODE="US"
+    local AWK_SCRIPT='
+    /^[[:space:]]*<string>[A-Z][A-Z]<\/string>[[:space:]]*$/ {
+        indent = ""
+        if (match($0, /^[[:space:]]*/)) {
+            indent = substr($0, RSTART, RLENGTH)
+        }
+        printf "%s<string>%s</string>\n", indent, "'"$NEW_COUNTRY_CODE"'"
+        next
+    }
+    { print $0 }
+    '
+    # Use a temporary file in a writable location like /tmp
+    local TEMP_PLIST="/tmp/temp_countryd.plist"
+    sudo awk "$AWK_SCRIPT" "$COUNTRYD_PLIST" > "$TEMP_PLIST"
+    sudo mv "$TEMP_PLIST" "$COUNTRYD_PLIST"
+    echo "$MSG_FORCE_US_REPLACE"
+    
+    sudo plutil -convert binary1 "$COUNTRYD_PLIST"
+    echo "$MSG_FORCE_US_CONVERT_BIN"
+
+    echo "$MSG_FORCE_US_LOCKING"
+    sudo chmod 444 "$COUNTRYD_PLIST"
+    sudo chflags uchg "$COUNTRYD_PLIST"
+    echo "$MSG_FORCE_US_LOCK_COMPLETE"
+
+    echo "$MSG_FORCE_US_SUCCESS"
+}
 
 
-# 1. Check SIP status
-echo "$MSG_SIP_CHECK"
-sip_status=$(csrutil status)
+# --- Function to Enable Apple Intelligence ---
+enable_ai() {
+    local ELIGIBILITY_PLIST="${ELIGIBILITY_DIR}/eligibility.plist"
+    local OS_ELIGIBILITY_PLIST="${OS_ELIGIBILITY_DIR}/eligibility.plist"
 
-if [[ $sip_status != *"System Integrity Protection status: disabled"* ]]; then
-    echo "$MSG_SIP_ENABLED_1"
-    echo "$MSG_SIP_ENABLED_2"
-    echo "$MSG_SIP_ENABLED_3"
-    echo "$MSG_SIP_ENABLED_4_1"
-    echo "$MSG_SIP_ENABLED_4_2"
-    echo "$MSG_SIP_ENABLED_4_3"
-    echo "$MSG_SIP_ENABLED_4_4"
-    echo "$MSG_SIP_ENABLED_5"
-    echo "=============================================="
-    exit 1 # Exit if SIP is enabled
-else
-    echo "$MSG_SIP_DISABLED"
-fi
+    # ── Verify PlistBuddy is available
+    if [[ ! -x $PLISTBUDDY ]]; then
+      echo "$MSG_PLISTBUDDY_WARN"
+      if command -v PlistBuddy >/dev/null 2>&1; then
+        PLISTBUDDY="PlistBuddy"
+      else
+        echo "$MSG_PLISTBUDDY_ERROR" >&2
+        exit 1
+      fi
+    fi
 
-echo ""
-echo "=============================================="
-echo "$MSG_START_STEPS"
-
-# --- Prepare to modify files ---
-echo "$MSG_PREPARE_MODIFY"
-
-# 2. Unlock and set file permissions to 777 for both directories
-echo "$MSG_UNLOCK_PERMS"
-# Remove uchg flag (ignore errors as file might not have the flag) for both
-sudo chflags nouchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/* || true
-# Set permissions to 777 for both
-sudo chmod 777 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
-
-# Ensure both plist files are writable
-if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
-    echo "$MSG_WRITE_PERMISSION_ERROR"
-    exit 1 # Exit if write permission is not obtained
-fi
-
-# 3. Backup original plist files
-echo "$MSG_BACKUP_START$ELIGIBILITY_PLIST to $PLIST_BACKUP ..."
-sudo cp "$ELIGIBILITY_PLIST" "$PLIST_BACKUP"
-if [ $? -ne 0 ]; then
-    echo "$MSG_BACKUP_ERROR$ELIGIBILITY_PLIST file. $MSG_RESTORE_WARNING_MANUAL"
-    exit 1 # Failure to backup is critical, must exit
-fi
-
-echo "$MSG_BACKUP_START$OS_ELIGIBILITY_PLIST to $OS_PLIST_BACKUP ..."
-sudo cp "$OS_ELIGIBILITY_PLIST" "$OS_PLIST_BACKUP"
-if [ $? -ne 0 ]; then
-    echo "$MSG_BACKUP_ERROR$OS_ELIGIBILITY_PLIST file. $MSG_RESTORE_WARNING_MANUAL"
-     # Clean up the first backup if the second one fails
-    sudo rm -f "$PLIST_BACKUP"
-    exit 1 # Failure to backup is critical, must exit
-fi
-echo "$MSG_BACKUP_COMPLETE"
-
-# 4. Modify plist file contents
-echo "$MSG_MODIFY_PLIST_START_1"
-# Use PlistBuddy to set values (change 3 to 2) in the first plist
-# Note: PlistBuddy path checked/set at the beginning of the script
-
-# Modify values under OS_ELIGIBILITY_DOMAIN_GREYMATTER
-# Add || true to prevent script exit if the key does not exist
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST" || true
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST" || true
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST" || true
-
-# Modify values under OS_ELIGIBILITY_DOMAIN_CALCIUM
-# Add || true
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
-
-echo "$MSG_MODIFY_PLIST_START_2"
-# Use PlistBuddy to set the value in the second plist
-# Add || true
-sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
-
-echo "$MSG_MODIFY_PLISTS_COMPLETE"
-
-
-# 5. Execute eligibility patch logic (replaces zouxian execution)
-echo "$MSG_EXECUTE_ZOUXIAN" # Use the updated message
-
-# Original Author: CatMe0w
-# Source: https://github.com/CatMe0w/zouxian/blob/master/zouxian.sh
-# This embedded script logic waits for eligibilityd and patches it using lldb.
-MAX_WAIT_TIME=60
-CHECK_INTERVAL=1
-SECONDS_PASSED=0
-PROCESS_FOUND=0 # Flag to indicate if eligibilityd was found (0=not found, 1=found)
-
-# Restart Eligility Engine
-echo "$MSG_RESTART_ELIGIBILITY"
-# Stop eligibilityd to ensure it can be patched
-# Use sudo to ensure we have the necessary permissions
-sudo launchctl stop com.apple.eligibilityd
-sleep 0.5 # Wait for a few seconds to ensure eligibilityd has stopped
-# Start eligibilityd again to ensure it is running before we attempt to attach
-sudo launchctl start com.apple.eligibilityd
-# Wait for eligibilityd to start and then patch it
-
-while [ $SECONDS_PASSED -lt $MAX_WAIT_TIME ]; do
-  PID=$(pgrep eligibilityd)
-  if [ ! -z "$PID" ]; then
-    echo "eligibilityd found with PID $PID"
-    PROCESS_FOUND=1 # Mark that the process was found
-    # Use sudo for lldb as it needs elevated privileges to attach to system processes
-    # set -e will cause the script to exit if the sudo lldb command itself fails critically.
-    sudo -E "$(xcrun --find lldb)" --batch \
-    -o "process attach --name eligibilityd" \
-    -o "expression (void) [[[InputManager sharedInstance] objectForInputValue:6] setValue:@\"LL\" forKey:@\"_deviceRegionCode\"]" \
-    -o "expression (void) [[EligibilityEngine sharedInstance] recomputeAllDomainAnswers]" \
-    -o "process detach" \
-    -o quit
-
-    # If we reach here, the lldb command itself completed (set -e didn't trigger).
-    # Even if lldb exited with a non-zero status for non-critical reasons,
-    # the attempt was made. We can now break the waiting loop.
-    break # Exit the while loop after attempting the lldb patch
-  fi
-  sleep $CHECK_INTERVAL
-  SECONDS_PASSED=$((SECONDS_PASSED + CHECK_INTERVAL))
-done
-
-# Check if the loop finished because it timed out (eligibilityd not found)
-if [ "$PROCESS_FOUND" -ne 1 ]; then
-  echo "eligibilityd not found after $MAX_WAIT_TIME seconds"
-  exit 1 # Exit the entire script if eligibilityd was never found within the timeout
-fi
-
-# If we reach this point, it means eligibilityd was found, and the lldb command was attempted.
-# The script will now continue to the next logical step (Step 6), where the user confirms success.
-
-# End of embedded eligibility patch logic
-
-
-echo ""
-echo "=============================================="
-echo "$MSG_CHECK_AI_TITLE"
-echo "$MSG_CHECK_AI_INSTR_1"
-echo "$MSG_CHECK_AI_INSTR_2"
-echo "$MSG_CHECK_AI_INSTR_3"
-echo "=============================================="
-
-# Use < /dev/tty to force reading input from the terminal, fixing the issue with read not pausing when executed via pipe
-read -r -p "$MSG_CHECK_AI_PROMPT" user_confirmation < /dev/tty
-
-# 7. Process based on user confirmation
-if [[ "$user_confirmation" =~ ^[Yy]$ ]]; then
-    # --- User confirmed success path ---
+    # 1. Check SIP status
     echo ""
     echo "=============================================="
-    echo "$MSG_SUCCESS_CONFIRMED_START"
+    echo "$MSG_SIP_CHECK"
+    if [[ $(csrutil status) != *"System Integrity Protection status: disabled."* ]]; then
+        echo "$MSG_SIP_ENABLED_1"; echo "$MSG_SIP_ENABLED_2"; echo "$MSG_SIP_ENABLED_3"
+        echo "$MSG_SIP_ENABLED_4_1"; echo "$MSG_SIP_ENABLED_4_2"; echo "$MSG_SIP_ENABLED_4_3"
+        echo "$MSG_SIP_ENABLED_4_4"; echo "$MSG_SIP_ENABLED_5"
+        echo "=============================================="
+        exit 1
+    else
+        echo "$MSG_SIP_DISABLED"
+    fi
 
-    # Set file permissions to 444 (read-only) for both directories
+    echo ""
+    echo "=============================================="
+    echo "$MSG_START_STEPS"
+
+    # 2. Unlock ALL related directories for compatibility
+    echo "$MSG_UNLOCK_PERMS"
+    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
+    sudo chmod 777 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
+
+    if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
+        echo "$MSG_WRITE_PERMISSION_ERROR" >&2; exit 1
+    fi
+
+    # 3. Backup original plist files
+    local PLIST_BACKUP="/tmp/eligibility.plist.bak"
+    local OS_PLIST_BACKUP="/tmp/os_eligibility.plist.bak"
+    echo "$MSG_BACKUP_START$ELIGIBILITY_PLIST..."
+    sudo cp "$ELIGIBILITY_PLIST" "$PLIST_BACKUP"
+    echo "$MSG_BACKUP_START$OS_ELIGIBILITY_PLIST..."
+    sudo cp "$OS_ELIGIBILITY_PLIST" "$OS_PLIST_BACKUP"
+    echo "$MSG_BACKUP_COMPLETE"
+
+    # 4. Apply new, simplified plist edits
+    echo "$MSG_MODIFY_PLISTS_START"
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST"   || true
+    echo "$MSG_MODIFY_PLISTS_COMPLETE"
+
+    # 5. Finalize and lock target plist files
+    echo "$MSG_FINALIZE_START"
     echo "$MSG_SET_PERMS_444"
-    sudo chmod 444 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
-
-    # Set immutable (uchg) flag for both directories
+    sudo chmod 444 "$ELIGIBILITY_PLIST" "$OS_ELIGIBILITY_PLIST"
     echo "$MSG_SET_UCHG"
-    sudo chflags uchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
+    sudo chflags uchg "$ELIGIBILITY_PLIST" "$OS_ELIGIBILITY_PLIST"
     echo "$MSG_FILE_LOCK_COMPLETE"
 
-    # Clean up backup files
+    # 6. Clean up backups
     echo "$MSG_CLEANUP_BACKUPS"
-    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP" # Use -f to ignore errors if files don't exist
+    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP"
 
     echo ""
+    echo "=============================================="
     echo "$MSG_OPERATION_COMPLETE"
+    
+    # 7. Optional: Force location to US
+    echo "$MSG_FORCE_US_PROMPT_TITLE"
+    echo "$MSG_FORCE_US_PROMPT_BENEFITS"
+    echo "$MSG_FORCE_US_PROMPT_WARNING"
+    read -r -p "$MSG_FORCE_US_PROMPT_CONFIRM" force_us < /dev/tty
+    if [[ "$force_us" =~ ^[Yy]$ ]]; then
+        force_us_location
+    fi
+
+    echo ""
+    echo "=============================================="
     echo "$MSG_RESTART_NOW"
-    echo "$MSG_CHECK_AI_AGAIN"
     echo "$MSG_RECOMMEND_RE_ENABLE_SIP"
     echo "=============================================="
+}
 
-else
-    # --- User confirmed failure path ---
+# --- Function to Unlock Files (Revert/Uninstall) ---
+unlock_files() {
     echo ""
     echo "=============================================="
-    echo "$MSG_FAILURE_CONFIRMED_START"
+    echo "$MSG_UNLOCK_START"
+    
+    echo "$MSG_UNLOCK_NOUCHG"
+    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST" 2>/dev/null || true
 
-    # Restore original plist files
-    # Restore the first plist
-    if [ -f "$PLIST_BACKUP" ]; then
-        echo "$MSG_RESTORE_START_1"
-        sudo rm -f "$ELIGIBILITY_PLIST"
-        sudo cp "$PLIST_BACKUP" "$ELIGIBILITY_PLIST"
-        if [ $? -ne 0 ]; then
-            echo "$MSG_RESTORE_WARNING_FAILED$ELIGIBILITY_PLIST. $MSG_RESTORE_WARNING_MANUAL"
-        else
-             echo "$ELIGIBILITY_PLIST$MSG_RESTORE_COMPLETE"
-        fi
-    else
-        echo "$MSG_RESTORE_WARNING_NOT_FOUND$PLIST_BACKUP. Cannot restore $ELIGIBILITY_PLIST file content."
-    fi
-
-    # Restore the second plist
-    if [ -f "$OS_PLIST_BACKUP" ]; then
-        echo "$MSG_RESTORE_START_2"
-        sudo rm -f "$OS_ELIGIBILITY_PLIST"
-        sudo cp "$OS_PLIST_BACKUP" "$OS_ELIGIBILITY_PLIST"
-        if [ $? -ne 0 ]; then
-            echo "$MSG_RESTORE_WARNING_FAILED$OS_ELIGIBILITY_PLIST. $MSG_RESTORE_WARNING_MANUAL"
-        else
-             echo "$OS_ELIGIBILITY_PLIST$MSG_RESTORE_COMPLETE"
-        fi
-    else
-        echo "$MSG_RESTORE_WARNING_NOT_FOUND$OS_PLIST_BACKUP. Cannot restore $OS_ELIGIBILITY_PLIST file content."
-    fi
-
-
-    # Restore file permissions to 444 (read-only, a safe default state) for both directories
-    echo "$MSG_SET_PERMS_444"
-    sudo chmod 444 "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/*
-
-    # Ensure uchg flag is removed (in case it was set during a previous failed attempt) for both directories
-    echo "$MSG_ENSURE_NO_UCHG"
-    sudo chflags nouchg "$ELIGIBILITY_DIR"/* "$OS_ELIGIBILITY_DIR"/* || true
-
-    # Clean up backup files
-    echo "$MSG_CLEANUP_BACKUPS"
-    sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP" # Use -f to ignore errors if files don't exist
+    echo "$MSG_UNLOCK_CHMOD"
+    sudo chmod 644 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST" 2>/dev/null || true
 
     echo ""
-    echo "$MSG_FAILURE_CONSIDER_STEPS"
-    echo "$MSG_FAILURE_STEP_1"
-    echo "$MSG_FAILURE_STEP_2"
-    echo "$MSG_FAILURE_STEP_3"
+    echo "$MSG_UNLOCK_COMPLETE"
     echo "=============================================="
+}
 
+
+# --- MAIN SCRIPT EXECUTION ---
+
+# 1. Show disclaimer and require agreement
+echo ""
+echo "$MSG_AGREEMENT_TITLE"
+echo "$MSG_AGREEMENT_LINE1"
+echo "$MSG_AGREEMENT_LINE2"
+echo "$MSG_AGREEMENT_LINE3"
+echo "----------------------------------------------------"
+read -r -p "$MSG_AGREEMENT_PROMPT" agreement < /dev/tty
+if [[ ! "$agreement" =~ ^[Yy]$ ]]; then
+    echo "$MSG_AGREEMENT_CANCEL"
+    exit 1
 fi
 
-
+# 2. Show mode selection menu
 echo ""
 echo "=============================================="
+echo "$MSG_MODE_SELECT_TITLE"
+echo "$MSG_MODE_SELECT_1"
+echo "$MSG_MODE_SELECT_2"
+echo "$MSG_MODE_SELECT_3"
+echo "=============================================="
+read -r -p "$MSG_MODE_PROMPT" mode_choice < /dev/tty
+
+# 3. Process user's choice
+case "$mode_choice" in
+    1)
+        enable_ai
+        ;;
+    2)
+        unlock_files
+        ;;
+    3)
+        echo "$MSG_EXITING"
+        exit 0
+        ;;
+    *)
+        echo "$MSG_INVALID_MODE" >&2
+        exit 1
+        ;;
+esac
+
+echo ""
 echo "$MSG_SCRIPT_END"
-echo "$MSG_DISCLAIMER"
+echo "$MSG_SUPPORT_URL"
 echo "=============================================="
 
 exit 0

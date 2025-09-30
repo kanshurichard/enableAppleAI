@@ -1,22 +1,21 @@
 # enableAppleAI
 
-一种在MacOS上（目前测试MacOS 15.4.1+及26 beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
-
-**2.0版本已上线，支持相册的“消除（Clean Up）”功能开启！**
+一种在MacOS上（目前测试MacOS 15.4.1+及26.1 beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
-TODO：
-目前尚不知道能否实现的功能：
-- 登录非AI启用区Apple ID账号（如中国区）时
-- 外置硬盘安装macOS时
-- 系统语言与Siri语言不一致时
+## 最新3.0版本介绍
 
-在`/private/var/db/eligibilityd/eligibility.plist` 这个系统文件中，有相关的代码，但目前还不知道要怎么改，才能去掉这些限制。
+- 换用了一种更优雅的方式（来自https://github.com/hyderay/AiOnMac的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**目测可以解决99%的Issue**。
+- 加入了对countryd的缓存文件修改，使得在MacOS26系统中，可以在设备位于中国等不支持的国家时正常开启Siri中的ChatGPT，Apple News及国际版苹果地图等功能（需要配合受支持地区的网络IP）
 
-由于本人没有相关设备/账号，欢迎你根据现有代码进行尝试，并反馈你的测试结果。
 
 ## 工作原理概述
+
+1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制MacOS系统认为设备符合开启Apple智能的要求，且当前设备位于美国。
+2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态。
+
+---以下为2.X旧版本的工作原理介绍----
 
 该脚本的主要思想是通过以下步骤尝试绕过 Apple 对 Apple 智能的启用检查：
 
@@ -28,10 +27,9 @@ TODO：
 
 1.  一台运行兼容 macOS 版本的 Mac (M1或以上CPU，macOS 15.1或以上版本)。
 2.  管理员权限，因为脚本使用 `sudo` 执行特权命令。
-3.  **登录iCloud的Apple ID不能是中国区**（美区肯定没问题，其他区未知）。
-4.  **系统地区设置为“美国”，系统语言、Siri语言均设置为`简体中文（普通话）/中国`或`English(USA)`——设置为其他不支持Apple AI的区域会导致开启失败。**
-5.  稳定的互联网连接以下载脚本。
-6.  SIP (System Integrity Protection) 已禁用。**（破解完成后可重新开启，不影响AI功能）**
+3.  **系统地区设置为“美国”，系统语言、Siri语言均设置为`简体中文（普通话）/中国`，`English(USA)`或其他任何受到Apple智能支持的语言和地区——设置为其他不支持Apple AI的区域会导致开启失败。**
+4.  稳定的互联网连接以下载脚本。
+5.  SIP (System Integrity Protection) 已禁用。**（破解完成后可重新开启，不影响AI功能）**
 
 ## 执行步骤
 
@@ -58,15 +56,13 @@ TODO：
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新2.13脚本：**
-
-在 @parkerjj 和 @MsRCAtN 帮助下，解决了两个可能导致注入失败的问题。
+**最新3.0脚本：**
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
 
-如果本版遇到问题，请您去提Issue，并可尝试2.11旧版：
+如果本版遇到问题，请您去提Issue，并可尝试2.13旧版：
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai_old.sh | bash
@@ -118,21 +114,21 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 ## 常见问题
 
 **问：如何卸载？**  
-答：只要在关闭SIP后，重新运行一遍脚本，到了问你是否看到AI功能出现的那一步，按“N”选否，脚本就会自动解锁所有已锁定文件。再次重启电脑后，系统就会自动用原始系统文件替代修改后的文件，相当于卸载所有对系统的更改。此时可以重新开启SIP。
+答：3.0版本已经加入了一键卸载功能。
 
 **问：能否在登录国区账号为iCloud时开启AI？**  
-答：目前还不可以，但有人进行了相关尝试，并（可能）[找到了一种变通的方法](https://github.com/kanshurichard/enableAppleAI/issues/6)。
+答：理论上3.0版本可以无视国区账号，强制开启AI，但由于我没有相关测试条件，希望得到您的反馈。对于2.X旧版，但有人进行了相关尝试，并（可能）[找到了一种变通的方法](https://github.com/kanshurichard/enableAppleAI/issues/6)。
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
-答：这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
+答：（3.0版本已不再有这个问题，请立刻尝试3.0新版代码）这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
 
 **问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
-答：Siri并不使用机型代码，而是使用你的IP地址和Wifi定位，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请在设置-隐私与安全性-定位服务中关闭Siri的定位权限，并考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
+答：在26系统中，请使用3.0版本代码解锁，即可开启Siri的ChatGPT（仍需要受支持地区的IP地址）。在15.X系统中，Siri并不使用机型代码，而是使用你的IP地址和Wifi定位，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请在设置-隐私与安全性-定位服务中关闭Siri的定位权限，并考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
 
 **问：图乐园（Image Playground）无法创建图片的原因？**  
-答：图乐园目前不支持中文语言下创建图片，请将系统语言改为英语（美国），即可正常使用。
+答：图乐园目前不支持中文语言下创建图片，请将系统语言改为英语（美国），即可正常使用（似乎MacOS26系统中已经支持了中文环境下图乐园）。
 
-**问：是否能开启繁体中文的AI？**  
-答：不可以，因为Apple到目前（2025.5）为止都没有支持繁体中文AI，因而你无法下载到相关语言文件。为开启AI，请确保系统相关语言设置为简体中文（或其他受到支持的语言）。
+**问：是否能开启繁体中文（或其他XX语言）的Apple智能？**  
+答：取决于Apple智能本身是否支持该语言。如果该语言尚未得到支持，即使在MacOS强制开启了Apple智能，也下载不到对应的语言文件（会一直卡在下载状态）。
 
 ---
