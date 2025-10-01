@@ -62,17 +62,19 @@
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
 ```
 
+**如果在国内访问困难，请尝试以下国内加速地址：**
+
+```bash
+curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.sh | bash
+```
+
+
 如果本版遇到问题，请您去提Issue，并可尝试2.13旧版：
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai_old.sh | bash
 ```
 
-**如果在国内访问困难，请尝试以下国内加速地址：**
-
-```bash
-curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.sh | bash
-```
 
 **手动执行脚本:**
 
