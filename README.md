@@ -4,10 +4,11 @@
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
-## 最新3.0版本介绍
+## 最新3.X版本介绍
 
 - 换用了一种更优雅的方式（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**目测可以解决99%的Issue**。
 - 加入了对countryd的缓存文件修改，使得在MacOS26系统中，可以在设备位于中国等不支持的国家时正常开启Siri中的ChatGPT，Apple News及国际版苹果地图等功能（需要配合受支持地区的网络IP）
+- 3.1版本加入了对Foundation Model, Personal QA等功能的支持。
 
 
 ## 工作原理概述
@@ -56,7 +57,7 @@
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新3.0脚本：**
+**最新3.1脚本：**
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
@@ -95,13 +96,6 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 
 ### 步骤 3: 按照脚本提示操作
 
-脚本运行过程中会输出当前执行的步骤，并可能在某个阶段暂停，提示您去“系统设置”中检查 Apple 智能是否已经显示为开启状态。
-
-* 如果 Apple 智能已经显示，请按 Y 键继续脚本的剩余部分。
-* 如果 Apple 智能未显示为开启，请按 N 键，脚本会自动恢复所有已有的修改。之后您可以重试一次，或来这里提交Issues。
-
-### 步骤 4: 重启并最终确认
-
 脚本完成执行后：
 
 1.  **重启您的 Mac。**
@@ -122,10 +116,10 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 答：理论上3.0版本可以无视国区账号，强制开启AI，但由于我没有相关测试条件，希望得到您的反馈。对于2.X旧版，但有人进行了相关尝试，并（可能）[找到了一种变通的方法](https://github.com/kanshurichard/enableAppleAI/issues/6)。
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
-答：（3.0版本已不再有这个问题，请立刻尝试3.0新版代码）这个问题已有多个报告，基本都是之前运行过其他开启AI的代码，比如 [XcodeLLMEligible](https://github.com/Kyle-Ye/XcodeLLMEligible/) 。我猜测由于该项目代码会尝试用自制程序替代系统自带的eligibilityd，导致现在代码无法注入真正的eligibilityd。请尝试用各种方式卸载之前破解残留的内容，还不行的话可能只能重装系统了。
+答：3.0版本已不再有这个问题，请立刻尝试3.0新版代码。
 
 **问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
-答：在26系统中，请使用3.0版本代码解锁，即可开启Siri的ChatGPT（仍需要受支持地区的IP地址）。在15.X系统中，Siri并不使用机型代码，而是使用你的IP地址和Wifi定位，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请在设置-隐私与安全性-定位服务中关闭Siri的定位权限，并考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
+答：在26.X系统中，请使用3.X版本代码解锁，即可开启Siri的ChatGPT（仍需要受支持地区的IP地址）。在15.X系统中，Siri并不使用机型代码，而是使用你的IP地址和Wifi定位，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请在设置-隐私与安全性-定位服务中关闭Siri的定位权限，并考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
 
 **问：图乐园（Image Playground）无法创建图片的原因？**  
 答：图乐园目前不支持中文语言下创建图片，请将系统语言改为英语（美国），即可正常使用（似乎MacOS26系统中已经支持了中文环境下图乐园）。
