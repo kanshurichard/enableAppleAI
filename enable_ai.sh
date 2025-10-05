@@ -4,8 +4,8 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 3.0 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 3.0 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 3.1 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 3.1 by KanShuRichard"
 echo "==================================================================="
 
 # --- Language Selection ---
@@ -142,10 +142,10 @@ case "$LANG" in
         MSG_FILE_LOCK_COMPLETE="File locking complete."
         MSG_CLEANUP_BACKUPS="Cleaning up backup files..."
         MSG_OPERATION_COMPLETE="Apple Intelligence patch applied successfully."
-        MSG_FORCE_US_PROMPT_TITLE="--- Optional Step: Force Device Location to US ---"
-        MSG_FORCE_US_PROMPT_BENEFITS="[Benefits] For macOS 26 (Sequoia), this can unlock features like ChatGPT in Siri, Apple News, and international version of Apple Maps in China (requires a suitable network IP)."
+        MSG_FORCE_US_PROMPT_TITLE="\n--- Optional Step: Force Location to US ---"
+        MSG_FORCE_US_PROMPT_BENEFITS="[Benefits] For macOS 26, this can unlock features like ChatGPT, Apple News, and international Apple Maps (requires a suitable network IP)."
         MSG_FORCE_US_PROMPT_WARNING="[Warning] This will disable the Gaode version of Apple Maps used in mainland China."
-        MSG_FORCE_US_PROMPT_CONFIRM="Would you like to force your device's physical country code to US? (y/n): "
+        MSG_FORCE_US_PROMPT_CONFIRM="Would you like to force your system's country code to US? (y/n): "
         MSG_FORCE_US_START="-> Starting to modify countryd database..."
         MSG_FORCE_US_UNLOCKING="   - Unlocking countryd file for writing..."
         MSG_FORCE_US_BACKUP="   - Backed up original countryd plist."
@@ -206,8 +206,8 @@ case "$LANG" in
         MSG_FILE_LOCK_COMPLETE="文件锁定完成。"
         MSG_CLEANUP_BACKUPS="正在清理备份文件..."
         MSG_OPERATION_COMPLETE="Apple Intelligence 修补程序已成功应用。"
-        MSG_FORCE_US_PROMPT_TITLE="--- 可选步骤：强制修改当前设备所处地区为美国 ---"
-        MSG_FORCE_US_PROMPT_BENEFITS="[好处] 在 macOS 26 (Sequoia) 系统中，此操作可在中国大陆解锁 Siri中的ChatGPT、Apple News 及国际版苹果地图等功能（需配合相应的网络IP）。"
+        MSG_FORCE_US_PROMPT_TITLE="\n--- 可选步骤：强制修改地区为美国 ---"
+        MSG_FORCE_US_PROMPT_BENEFITS="[好处] 在 macOS 26 系统中，此操作可解锁 ChatGPT、Apple News 及国际版苹果地图等功能（需配合相应的网络IP）。"
         MSG_FORCE_US_PROMPT_WARNING="[副作用] 此操作将导致无法在中国大陆境内使用高德版苹果地图。"
         MSG_FORCE_US_PROMPT_CONFIRM="您是否希望将系统的国家代码强制修改为美国 (US)？(y/n): "
         MSG_FORCE_US_START="-> 开始修改 countryd 数据库..."
@@ -353,9 +353,16 @@ enable_ai() {
 
     # 4. Apply new, simplified plist edits
     echo "$MSG_MODIFY_PLISTS_START"
+    # --- Modifications for os_eligibility.plist ---
     sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
     sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST"   || true
+    
+    # --- Modifications for eligibility.plist ---
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_FOUNDATION_MODELS:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_PERSONAL_QA:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_SIRI_WITH_APP_INTENTS:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
     echo "$MSG_MODIFY_PLISTS_COMPLETE"
 
     # 5. Finalize and lock target plist files
