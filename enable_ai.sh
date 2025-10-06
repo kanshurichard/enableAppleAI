@@ -4,9 +4,10 @@ set -e
 
 # --- Initial Welcome ---
 echo "==================================================================="
-echo " macOS Apple Intelligence Enablement Script 3.1 by KanShuRichard"
-echo "       macOS Apple 智能启用辅助脚本 3.1 by KanShuRichard"
+echo " macOS Apple Intelligence Enablement Script 3.11 by KanShuRichard"
+echo "       macOS Apple 智能启用辅助脚本 3.11 by KanShuRichard"
 echo "==================================================================="
+#!/bin/bash
 
 # --- Language Selection ---
 echo "Please select your language:"
@@ -134,7 +135,7 @@ case "$LANG" in
         MSG_BACKUP_START="Backing up original file "
         MSG_BACKUP_ERROR="Error: Failed to back up "
         MSG_BACKUP_COMPLETE="Backup complete."
-        MSG_MODIFY_PLISTS_START="Patching eligibility plists..."
+        MSG_MODIFY_PLISTS_START="Patching eligibility plists (this may take a moment)..."
         MSG_MODIFY_PLISTS_COMPLETE="Plist modifications complete."
         MSG_FINALIZE_START="Finalizing and locking files..."
         MSG_SET_PERMS_444="Setting permissions to read-only (444)..."
@@ -143,7 +144,7 @@ case "$LANG" in
         MSG_CLEANUP_BACKUPS="Cleaning up backup files..."
         MSG_OPERATION_COMPLETE="Apple Intelligence patch applied successfully."
         MSG_FORCE_US_PROMPT_TITLE="\n--- Optional Step: Force Location to US ---"
-        MSG_FORCE_US_PROMPT_BENEFITS="[Benefits] For macOS 26, this can unlock features like ChatGPT, Apple News, and international Apple Maps (requires a suitable network IP)."
+        MSG_FORCE_US_PROMPT_BENEFITS="[Benefits] For macOS Sequoia, this can unlock features like ChatGPT, Apple News, and international Apple Maps (requires a suitable network IP)."
         MSG_FORCE_US_PROMPT_WARNING="[Warning] This will disable the Gaode version of Apple Maps used in mainland China."
         MSG_FORCE_US_PROMPT_CONFIRM="Would you like to force your system's country code to US? (y/n): "
         MSG_FORCE_US_START="-> Starting to modify countryd database..."
@@ -198,7 +199,7 @@ case "$LANG" in
         MSG_BACKUP_START="正在备份原始文件 "
         MSG_BACKUP_ERROR="错误：未能成功备份 "
         MSG_BACKUP_COMPLETE="备份完成。"
-        MSG_MODIFY_PLISTS_START="正在修补资格属性列表文件..."
+        MSG_MODIFY_PLISTS_START="正在修补资格属性列表文件 (请稍候)..."
         MSG_MODIFY_PLISTS_COMPLETE="属性列表文件修改完成。"
         MSG_FINALIZE_START="正在完成收尾工作并锁定文件..."
         MSG_SET_PERMS_444="正在设置文件权限为只读 (444)..."
@@ -207,7 +208,7 @@ case "$LANG" in
         MSG_CLEANUP_BACKUPS="正在清理备份文件..."
         MSG_OPERATION_COMPLETE="Apple Intelligence 修补程序已成功应用。"
         MSG_FORCE_US_PROMPT_TITLE="\n--- 可选步骤：强制修改地区为美国 ---"
-        MSG_FORCE_US_PROMPT_BENEFITS="[好处] 在 macOS 26 系统中，此操作可解锁 ChatGPT、Apple News 及国际版苹果地图等功能（需配合相应的网络IP）。"
+        MSG_FORCE_US_PROMPT_BENEFITS="[好处] 在 macOS Sequoia 系统中，此操作可解锁 ChatGPT、Apple News 及国际版苹果地图等功能（需配合相应的网络IP）。"
         MSG_FORCE_US_PROMPT_WARNING="[副作用] 此操作将导致无法在中国大陆境内使用高德版苹果地图。"
         MSG_FORCE_US_PROMPT_CONFIRM="您是否希望将系统的国家代码强制修改为美国 (US)？(y/n): "
         MSG_FORCE_US_START="-> 开始修改 countryd 数据库..."
@@ -247,6 +248,21 @@ OS_ELIGIBILITY_DIR="/private/var/db/os_eligibility"
 COUNTRYD_PLIST="/private/var/db/com.apple.countryd/countryCodeCache.plist"
 
 PLISTBUDDY="/usr/libexec/PlistBuddy"
+
+# --- Function to set a plist value ONLY if the key already exists ---
+set_existing_plist_key() {
+    local file="$1"
+    local key_path="$2"
+    local value="$3"
+
+    # Check if the full key path exists before attempting to set it.
+    if sudo "$PLISTBUDDY" -c "Print :${key_path}" "$file" &>/dev/null; then
+        # Key exists, so set its value.
+        sudo "$PLISTBUDDY" -c "Set :${key_path} ${value}" "$file"
+    fi
+    # If the key does not exist, do nothing, per user request.
+}
+
 
 # --- Function to Force Location to US ---
 force_us_location() {
@@ -351,18 +367,16 @@ enable_ai() {
     sudo cp "$OS_ELIGIBILITY_PLIST" "$OS_PLIST_BACKUP"
     echo "$MSG_BACKUP_COMPLETE"
 
-    # 4. Apply new, simplified plist edits
+    # 4. Apply robust plist edits
     echo "$MSG_MODIFY_PLISTS_START"
     # --- Modifications for os_eligibility.plist ---
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+    set_existing_plist_key "$OS_ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t" "4"
+    set_existing_plist_key "$OS_ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t" "4"
     
     # --- Modifications for eligibility.plist ---
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_FOUNDATION_MODELS:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_PERSONAL_QA:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_SIRI_WITH_APP_INTENTS:os_eligibility_answer_t 4" "$ELIGIBILITY_PLIST" || true
+    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t" "4"
+    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_CALCIUM:os_eligibility_answer_t" "4"
+    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_FOUNDATION_MODELS:os_eligibility_answer_t" "4"
     echo "$MSG_MODIFY_PLISTS_COMPLETE"
 
     # 5. Finalize and lock target plist files
