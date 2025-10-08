@@ -6,23 +6,26 @@
 
 ## 最新3.X版本介绍
 
-- 换用了一种更优雅的方式（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**目测可以解决99%的Issue**。
+- 增加了方法2（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**建议方法1失败时尝试**。
 - 加入了对countryd的缓存文件修改，使得在MacOS26系统中，可以在设备位于中国等不支持的国家时正常开启Siri中的ChatGPT，Apple News及国际版苹果地图等功能（需要配合受支持地区的网络IP）
 - 3.1版本加入了对Foundation Model, Personal QA等功能的支持。
 
 
 ## 工作原理概述
 
-1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制让MacOS系统认为：（1）设备符合开启Apple智能的要求；（2）设备当前位于美国。
+---方法1（修改更彻底，建议优先尝试）---
+
+尝试试绕过 Apple 对 Apple 智能的启用检查：
+
+1.  用一个[来自这里](https://github.com/CatMe0w/zouxian)的代码，使用lldb暂时注入eligibiltyd，模拟美版LL机型，使其向系统数据库输出该机型支持AI的信息（具体功能请参考该脚本的源仓库）。
+2.  修改 `/private/var/db/eligibilityd/eligibility.plist` 这个系统文件，特别是调整其中关于设备区域码 (OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE) 和外部启动盘 (OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE) 的检查值，禁止系统用这些参数来作为功能开启的前提条件。
 2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
 
----以下为2.X旧版本的工作原理介绍----
+---方法2（可解决方法1失败的奇怪问题，但可能新功能解锁不一定全面）---
 
-该脚本的主要思想是通过以下步骤尝试绕过 Apple 对 Apple 智能的启用检查：
+1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制让MacOS系统认为设备符合开启Apple智能各项功能的要求。
+2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
 
-1.  下载并执行一个[外部的第三方脚本](https://github.com/CatMe0w/zouxian)，该脚本会暂时注入eligibiltyd，使其向系统数据库输出该机型支持AI的信息（具体功能请参考该脚本的源仓库）。
-2.  修改 `/private/var/db/eligibilityd/eligibility.plist` 这个系统文件，特别是调整其中关于设备区域码 (OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE) 和外部启动盘 (OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE) 的检查值，禁止系统用这些参数来作为功能开启的前提条件。
-3.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的数据库文件状态。
 
 ## 前置条件
 
