@@ -45,6 +45,8 @@ done
 
 
 # --- Language Settings ---
+# (Message variables remain the same as v4.1, only code logic is changed)
+# ... (Message definitions are omitted for brevity but are identical to the previous version)
 # Declare variables for messages
 # (Shared messages)
 MSG_SUDO_REQUIRED=""
@@ -364,6 +366,7 @@ case "$LANG" in
 esac
 # --- End Language Settings ---
 
+
 # --- SCRIPT CONSTANTS AND FUNCTIONS ---
 # ... (The rest of the script will follow)
 # ── File Paths & Dirs
@@ -421,8 +424,8 @@ force_us_location() {
         return
     fi
     echo -e "$MSG2_FORCE_US_UNLOCKING"
-    sudo chflags nouchg "$COUNTRYD_PLIST" 2>/dev/null || true
-    sudo chmod 777 "$COUNTRYD_PLIST" 2>/dev/null || true
+    sudo chflags nouchg "$COUNTRYD_PLIST"
+    sudo chmod 777 "$COUNTRYD_PLIST"
     local BACKUP_FILE="${COUNTRYD_PLIST}.bak"
     sudo cp "$COUNTRYD_PLIST" "$BACKUP_FILE"
     echo -e "$MSG2_FORCE_US_BACKUP"
@@ -471,8 +474,8 @@ enable_ai_method_1() {
 
     echo -e "$M1_PREPARE_MODIFY"
     echo -e "$M1_UNLOCK_PERMS"
-    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
-    sudo chmod 777 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
+    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/*
+    sudo chmod 777 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/*
 
     if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
         echo -e "$MSG_WRITE_PERMISSION_ERROR" >&2; exit 1
@@ -485,13 +488,13 @@ enable_ai_method_1() {
     echo -e "$MSG_BACKUP_COMPLETE"
 
     echo -e "$M1_MODIFY_PLIST_START_1"
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST" || true
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_COUNTRY_BILLING 2" "$ELIGIBILITY_PLIST"
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_AND_SIRI_LANGUAGE_MATCH 2" "$ELIGIBILITY_PLIST"
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_GREYMATTER:status:OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE 2" "$ELIGIBILITY_PLIST"
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_CALCIUM:status:OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE 2" "$ELIGIBILITY_PLIST"
     echo -e "$M1_MODIFY_PLIST_START_2"
-    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST" || true
+    sudo "$PLISTBUDDY" -c "Set :OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t 4" "$OS_ELIGIBILITY_PLIST"
     echo -e "$M1_MODIFY_PLISTS_COMPLETE"
 
     echo -e "$M1_EXECUTE_ZOUXIAN"
@@ -581,7 +584,7 @@ enable_ai_method_1() {
             sudo cp "$OS_PLIST_BACKUP" "$OS_ELIGIBILITY_PLIST"
         fi
         echo -e "$M1_ENSURE_NO_UCHG"
-        sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
+        sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/*
         echo -e "$MSG_CLEANUP_BACKUPS"
         sudo rm -f "$PLIST_BACKUP" "$OS_PLIST_BACKUP"
         
@@ -608,8 +611,8 @@ enable_ai_method_2() {
     echo -e "${BLUE}==============================================${RESET}"
     echo -e "$MSG2_START_STEPS"
     echo -e "$UNLOCK_PERMS"
-    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
-    sudo chmod 777 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* 2>/dev/null || true
+    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/*
+    sudo chmod 777 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/*
     if [ ! -w "$ELIGIBILITY_PLIST" ] || [ ! -w "$OS_ELIGIBILITY_PLIST" ]; then
         echo -e "$MSG_WRITE_PERMISSION_ERROR" >&2; exit 1
     fi
@@ -671,9 +674,9 @@ unlock_files() {
     echo -e "$MSG_UNLOCK_START"
     echo ""
     echo -e "$MSG_UNLOCK_NOUCHG"
-    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST" 2>/dev/null || true
+    sudo chflags nouchg "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST"
     echo -e "$MSG_UNLOCK_CHMOD"
-    sudo chmod 644 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST" 2>/dev/null || true
+    sudo chmod 644 "${ELIGIBILITY_DIR}"/* "${OS_ELIGIBILITY_DIR}"/* "$COUNTRYD_PLIST"
     echo ""
     echo -e "$MSG_UNLOCK_COMPLETE"
     echo -e "${BLUE}==============================================${RESET}"
