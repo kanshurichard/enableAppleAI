@@ -119,7 +119,7 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 答：本代码会随着系统更新不断适配新增的AI功能（比如Foundation Model），请再次执行新版代码以开启新版系统新增支持的AI功能。执行前请【先卸载老代码，之后重启，再执行新代码】。
 
 **问：能否在登录国区账号为iCloud时开启AI？**  
-答：目前3.X版本据报已经可以实现这个功能。
+答：目前3.X版本据报已经可以实现这个功能——请先用方法2尝试。如果一定要用方法1，discussion里有其他人提供的解决方案。
 
 **问：执行eligibilityd相关的注入代码时报错，怎么办？**  
 答：3.0版本已不再有这个问题，请立刻尝试3.0新版代码。
