@@ -627,7 +627,6 @@ enable_ai_method_2() {
     set_existing_plist_key "$OS_ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_STRONTIUM:os_eligibility_answer_t" "4"
     set_existing_plist_key "$OS_ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_XCODE_LLM:os_eligibility_answer_t" "4"
     set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t" "4"
-    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_CALCIUM:os_eligibility_answer_t" "4"
     set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_FOUNDATION_MODELS:os_eligibility_answer_t" "4"
     echo -e "$MSG2_MODIFY_PLISTS_COMPLETE"
     echo -e "$MSG_FINALIZE_START"
