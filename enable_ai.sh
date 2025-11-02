@@ -13,8 +13,8 @@ RESET="\033[0m"
 
 # --- Initial Welcome ---
 echo -e "${BLUE}===================================================================${RESET}"
-echo -e "${BOLD}${CYAN} macOS Apple Intelligence Enablement Script 3.2 by KanShuRichard${RESET}"
-echo -e "${BOLD}${CYAN}       macOS Apple 智能启用辅助脚本 3.2 by KanShuRichard${RESET}"
+echo -e "${BOLD}${CYAN} macOS Apple Intelligence Enablement Script 3.21 by KanShuRichard${RESET}"
+echo -e "${BOLD}${CYAN}       macOS Apple 智能启用辅助脚本 3.21 by KanShuRichard${RESET}"
 echo -e "${BLUE}===================================================================${RESET}"
 #!/bin/bash
 
@@ -629,8 +629,6 @@ enable_ai_method_2() {
     set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_GREYMATTER:os_eligibility_answer_t" "4"
     set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_CALCIUM:os_eligibility_answer_t" "4"
     set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_FOUNDATION_MODELS:os_eligibility_answer_t" "4"
-    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_PERSONAL_QA:os_eligibility_answer_t" "4"
-    set_existing_plist_key "$ELIGIBILITY_PLIST" "OS_ELIGIBILITY_DOMAIN_SIRI_WITH_APP_INTENTS:os_eligibility_answer_t" "4"
     echo -e "$MSG2_MODIFY_PLISTS_COMPLETE"
     echo -e "$MSG_FINALIZE_START"
     echo -e "$MSG_SET_PERMS_444"
