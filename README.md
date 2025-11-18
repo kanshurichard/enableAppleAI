@@ -4,6 +4,10 @@
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=kanshurichard/enableappleai&type=date&legend=top-left)](https://www.star-history.com/#kanshurichard/enableappleai&type=date&legend=top-left)
+
 ## 最新3.X版本介绍
 
 - 增加了方法2（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**建议方法1失败时尝试**。
