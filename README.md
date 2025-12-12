@@ -2,7 +2,7 @@
 
 [English README](README_EN.md) | [中文说明](README.md)
 
-一种在MacOS上（目前测试MacOS 15.1+及16.X beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
+一种在MacOS上（目前测试MacOS 15.4+及26.1均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
@@ -12,10 +12,10 @@
 
 ## 最新3.21版本介绍
 
-- **新增“强制修改地区为美国”功能**：针对macOS 16.X（脚本中提及的macOS 26），通过修改 `countryd` 配置文件，即使设备位于中国，也可开启 Siri 整合 ChatGPT、Apple News 及国际版苹果地图。（需配合受支持地区的网络环境）。
+- **新增“强制修改地区为美国”功能**：针对macOS 26.X，通过修改 `countryd` 配置文件，即使设备位于中国，也可开启 Siri 整合 ChatGPT、Apple News 及国际版苹果地图。（需配合受支持地区的网络环境）。
 - **新增 iPhone 镜像功能预警**：**重要提醒**，如果您使用 iPhone 镜像功能，必须在修改国家代码前先完成 iPhone 与 Mac 的配对，否则修改后可能导致无法配对。
 - 增加了方法2（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**建议方法1失败时尝试**。
-- 3.1版本加入了对Foundation Model, Personal QA等功能的支持。
+- 3.1+版本加入了对Foundation Model等功能的支持。
 
 
 ## 工作原理概述

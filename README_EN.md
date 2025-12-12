@@ -2,7 +2,7 @@
 
 [English README](README_EN.md) | [中文说明](README.md)
 
-A method to permanently and stably enable Apple Intelligence on Mac devices sold in China, without running background services long-term or keeping SIP disabled permanently. (Tested on macOS 15.1+ and 16.X beta).
+A method to permanently and stably enable Apple Intelligence on Mac devices sold in China, without running background services long-term or keeping SIP disabled permanently. (Tested on macOS 15.4+ and 26.1).
 
 <img width="1411" alt="Screenshot" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
@@ -12,10 +12,10 @@ A method to permanently and stably enable Apple Intelligence on Mac devices sold
 
 ## Latest Version 3.21 Features
 
-- **New "Force US Location" Feature**: Targeting macOS 16.X (referred to as macOS 26 in script), modifying the `countryd` configuration allows unlocking Siri integration with ChatGPT, Apple News, and International Apple Maps even if the device is physically in China (requires supported network environment).
+- **New "Force US Location" Feature**: Targeting macOS 26.X, modifying the `countryd` configuration allows unlocking Siri integration with ChatGPT, Apple News, and International Apple Maps even if the device is physically in China (requires supported network environment).
 - **New iPhone Mirroring Warning**: **IMPORTANT**: If you use iPhone Mirroring, you **MUST** pair your iPhone with your Mac **BEFORE** changing the country code. Modification afterwards may prevent pairing.
 - **Method 2 Added** (Inspired by https://github.com/hyderay/AiOnMac): Simply modifies plist files without `lldb` injection. **Recommended to try if Method 1 fails.**
-- Version 3.1 added support for Foundation Models, Personal QA, etc.
+- Version 3.1+ added support for Foundation Models, etc.
 
 ## How It Works
 
