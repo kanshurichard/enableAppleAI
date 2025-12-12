@@ -1,6 +1,8 @@
 # enableAppleAI
 
-一种在MacOS上（目前测试MacOS 15.4.1+及26.1 beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
+[English README](README_EN.md) | [中文说明](README.md)
+
+一种在MacOS上（目前测试MacOS 15.1+及16.X beta均可），无需长期运行后台服务，也无需长期禁用SIP，即可永久稳定开启中国销售Mac设备上Apple AI的方法。
 
 <img width="1411" alt="截屏2025-05-04 09 42 49" src="https://github.com/user-attachments/assets/eeb7a4ef-2d6d-46d5-8305-dd2daaafcd04" />
 
@@ -8,28 +10,34 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=kanshurichard/enableappleai&type=date&legend=top-left)](https://www.star-history.com/#kanshurichard/enableappleai&type=date&legend=top-left)
 
-## 最新3.X版本介绍
+## 最新3.21版本介绍
 
+- **新增“强制修改地区为美国”功能**：针对macOS 16.X（脚本中提及的macOS 26），通过修改 `countryd` 配置文件，即使设备位于中国，也可开启 Siri 整合 ChatGPT、Apple News 及国际版苹果地图。（需配合受支持地区的网络环境）。
+- **新增 iPhone 镜像功能预警**：**重要提醒**，如果您使用 iPhone 镜像功能，必须在修改国家代码前先完成 iPhone 与 Mac 的配对，否则修改后可能导致无法配对。
 - 增加了方法2（来自 https://github.com/hyderay/AiOnMac 的启发）：只需修改plist文件，不再需要使用lldb对系统进程进行任何调试——**建议方法1失败时尝试**。
-- 加入了对countryd的缓存文件修改，使得在MacOS26系统中，可以在设备位于中国等不支持的国家时正常开启Siri中的ChatGPT，Apple News及国际版苹果地图等功能（需要配合受支持地区的网络IP）
 - 3.1版本加入了对Foundation Model, Personal QA等功能的支持。
 
 
 ## 工作原理概述
 
----方法1（修改更彻底，建议优先尝试）---
+### 方法1（修改更彻底，建议优先尝试）
 
 尝试试绕过 Apple 对 Apple 智能的启用检查：
 
 1.  用一个[来自这里](https://github.com/CatMe0w/zouxian)的代码，使用lldb暂时注入eligibiltyd，模拟美版LL机型，使其向系统数据库输出该机型支持AI的信息（具体功能请参考该脚本的源仓库）。
 2.  修改 `/private/var/db/eligibilityd/eligibility.plist` 这个系统文件，特别是调整其中关于设备区域码 (OS_ELIGIBILITY_INPUT_DEVICE_REGION_CODE) 和外部启动盘 (OS_ELIGIBILITY_INPUT_EXTERNAL_BOOT_DRIVE) 的检查值，禁止系统用这些参数来作为功能开启的前提条件。
-2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
+3.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
 
----方法2（可解决方法1失败的奇怪问题，但可能新功能解锁不一定全面）---
+### 方法2（可解决方法1失败的奇怪问题）
 
-1.  修改 `/private/var/db/eligibilityd/eligibility.plist`等几个系统缓存文件，强制让MacOS系统认为设备符合开启Apple智能各项功能的要求。
-2.  通过修改文件权限和设置 `uchg` (immutable) 标记，锁定修改后的各个缓存文件状态，防止系统刷新缓存文件。
+1.  可以直接修改 `/private/var/db/eligibilityd/eligibility.plist` 等几个系统缓存文件，强制让MacOS系统认为设备符合开启Apple智能各项功能的要求。
+2.  如果不使用lldb注入，可能会无法开启部分高级功能，但可以作为保底方案。
+3.  同样通过 `uchg` 锁定文件。
 
+### 附加功能：强制修改地区（Method 1 & 2 完成后可选）
+
+- 修改 `/private/var/db/com.apple.countryd/countryCodeCache.plist` 文件，将缓存的国家代码强制改为 `US`。
+- 这可以欺骗系统认为设备物理位于美国，从而解锁 ChatGPT 整合等基于地理位置限制的功能。
 
 ## 前置条件
 
@@ -64,7 +72,7 @@
 
 如果您完全信任本脚本，可以使用以下单命令直接执行：
 
-**最新3.1脚本：**
+**最新3.21脚本：**
 
 ```bash
 curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enable_ai.sh | bash
@@ -103,11 +111,13 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 
 ### 步骤 3: 按照脚本提示操作
 
-脚本完成执行后：
-
-1.  **重启您的 Mac。**
-2.  重启后，再次前往 **系统设置 (System Settings)** > **通用 (General)** > **Apple 智能 (Apple Intelligence)** 检查功能状态。
-3.  如果 Apple 智能仍为开启状态，并且您希望恢复系统的安全性，**强烈建议**您再次进入恢复模式，执行 `csrutil enable` 命令重新启用 SIP。
+1.  **选择语言**：支持中文和英文。
+2.  **选择操作**：选择“启用 Apple Intelligence”。
+3.  **选择方法**：建议优先尝试 **方法 1**。
+4.  **可选步骤**：如果您在 macOS 16+ (macOS 26) 上，脚本会询问是否强制修改地区为美国。**注意：如果您需要使用 iPhone 镜像，请务必在确认此步前完成配对！**
+5.  **重启**：脚本执行完毕后，重启 Mac。
+6.  **检查**：系统设置 -> Apple 智能与 Siri，查看是否已开启。
+7.  **恢复 SIP**：确认功能正常后，建议重新进入恢复模式执行 `csrutil enable` 启用 SIP。
 
 ## 故障排除与反馈
 
@@ -116,25 +126,23 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 
 ## 常见问题
 
-**问：如何卸载？**  
-答：3.X版本已经加入了一键卸载功能。
+**问：如何卸载？**
+答：运行脚本，在主菜单选择 `2. 解锁文件 (卸载)` 即可一键恢复文件权限和状态。
 
-**问：之前在老版本系统（比如15.X）中运行过代码，现在更新了新版系统（比如26.X），为什么新系统新增的某些AI功能没有出现？**  
-答：本代码会随着系统更新不断适配新增的AI功能（比如Foundation Model），请再次执行新版代码以开启新版系统新增支持的AI功能。执行前请【先卸载老代码，之后重启，再执行新代码】。
+**问：为什么新系统（如 macOS 16/26）新增的 AI 功能没有出现？**
+答：请更新脚本到最新版（v3.21+）。新版脚本增加了对 `countryd` 的修改，这对解锁 ChatGPT 等功能至关重要。升级前建议先运行旧脚本的“卸载”功能。
 
-**问：能否在登录国区账号为iCloud时开启AI？**  
-答：目前3.X版本据报已经可以实现这个功能——请先用方法2尝试。如果一定要用方法1，discussion里有其他人提供的解决方案。
+**问：iPhone 镜像（iPhone Mirroring）无法连接？**
+答：如果您使用了“强制修改地区为美国”的功能，可能会导致 Mac 和 iPhone 的地区代码不匹配，从而无法配对。**解决方法**：运行脚本选择“卸载”恢复原状 -> 配对 iPhone -> 再次运行脚本启用 AI (此时修改地区不会影响已配对的连接)。
 
-**问：执行eligibilityd相关的注入代码时报错，怎么办？**  
-答：3.0+版本中的“方法2”已不再有这个问题，请立刻尝试。
+**问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用？**
+答：请尝试使用脚本中的“方法2”或在“方法1”成功后，同意进行“强制修改地区为美国”的操作。这会将系统底层的地理位置缓存锁定为 US，从而绕过通过 IP 判断地区的限制（注意：仍需配合受支持地区节点的网络环境）。
 
-**问：开启AI后，Siri调用的仍然是百度百科这类国内工具，ChatGPT也无法正常调用，怎么办？**  
-答：在26.X系统中，请使用3.X版本代码解锁，即可开启Siri的ChatGPT（仍需要受支持地区的IP地址）。在15.X系统中，Siri并不使用机型代码，而是使用你的IP地址和Wifi定位，判断是否调用国内服务（如百度），即使在外版机型上，也是这样的。请在设置-隐私与安全性-定位服务中关闭Siri的定位权限，并考虑将所有相关URL放入代理名单，如需更多帮助，可参考：https://nsringo.github.io。
+**问：图乐园（Image Playground）无法创建图片？**
+答：图乐园在老版本系统中不支持中文语言下创建图片，或者需要 macOS 26.1+ 系统。在之前的版本，请尝试将系统语言临时改为英语（美国）。
 
-**问：图乐园（Image Playground）无法创建图片的原因？**  
-答：图乐园目前不支持中文语言下创建图片，请将系统语言改为英语（美国），即可正常使用（MacOS26.1+系统中已经支持了中文环境下图乐园）。
-
-**问：是否能开启繁体中文（或其他XX语言）的Apple智能？**  
-答：取决于Apple智能本身是否支持该语言。如果该语言尚未得到支持，即使在MacOS强制开启了Apple智能，也下载不到对应的语言文件（会一直卡在下载状态）。MacOS26.1之后的系统已经支持了繁体中文环境下的Apple只能开启。
+**问：是否能开启繁体中文（或其他非首发语言）的Apple智能？**
+答：取决于 Apple 官方是否已下发该语言包。如果官方尚未支持，强制开启也没有用。
 
 ---
+
