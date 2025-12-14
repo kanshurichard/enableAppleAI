@@ -114,7 +114,7 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 1.  **选择语言**：支持中文和英文。
 2.  **选择操作**：选择“启用 Apple Intelligence”。
 3.  **选择方法**：建议优先尝试 **方法 1**。
-4.  **可选步骤**：如果您在 macOS 16+ (macOS 26) 上，脚本会询问是否强制修改地区为美国。**注意：如果您需要使用 iPhone 镜像，请务必在确认此步前完成配对！**
+4.  **可选步骤**：如果您在 macOS 26上，脚本会询问是否强制修改地区为美国。**注意：如果您需要使用 iPhone 镜像，请务必在确认此步前完成配对！**
 5.  **重启**：脚本执行完毕后，重启 Mac。
 6.  **检查**：系统设置 -> Apple 智能与 Siri，查看是否已开启。
 7.  **恢复 SIP**：确认功能正常后，建议重新进入恢复模式执行 `csrutil enable` 启用 SIP。
