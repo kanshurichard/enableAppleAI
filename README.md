@@ -123,6 +123,7 @@ curl -sL https://raw.githubusercontent.com/kanshurichard/enableAppleAI/main/enab
 
 ## 故障排除与反馈
 
+* Siri / ChatGPT 扩展提示地区不可用或登录失败时，可参考[分流与地区缓存排查记录](docs/chatgpt-troubleshooting.md)。该方法已在 macOS 27 本机实验中恢复 ChatGPT 扩展登录；此验证独立于项目原有启用脚本的兼容性。
 * 如果脚本执行过程中遇到错误，请检查终端输出的错误信息。
 * 如果按照步骤执行后 Apple 智能未能成功启用，或者出现其他异常，您也可以在本项目的 GitHub Issues 中提交问题。
 
