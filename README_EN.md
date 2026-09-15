@@ -112,7 +112,7 @@ curl -sL https://cdn.jsdelivr.net/gh/kanshurichard/enableAppleAI@main/enable_ai.
 
 ## Troubleshooting & Feedback
 
-* For Siri / ChatGPT extension region or sign-in errors, see the [routing and country-cache diagnostic notes (Chinese)](docs/chatgpt-troubleshooting.md). These observations do not establish script compatibility with macOS 26.5 beta 4 or later; the Chinese README's compatibility warning still applies.
+* For Siri / ChatGPT extension region or sign-in errors, see the [routing and country-cache diagnostic notes (Chinese)](docs/chatgpt-troubleshooting.md). This method successfully restored ChatGPT extension sign-in in a local macOS 27 experiment. This validation is separate from compatibility of the existing activation script.
 *   Check terminal output for errors during execution.
 *   If Apple Intelligence fails to enable, try Method 2.
 *   Submit issues on GitHub if problems persist.
